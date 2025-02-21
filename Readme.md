@@ -22,4 +22,4 @@ HoneywareX is a **low-interaction honeypot** designed to simulate an SSH environ
 
 2. Start AI and Tunelling Server:
    ```bash
-   bash ai_server.sh
+   sudo bash ai_server.sh
