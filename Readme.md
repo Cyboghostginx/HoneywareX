@@ -19,3 +19,7 @@ HoneywareX is a **low-interaction honeypot** designed to simulate an SSH environ
    ```bash
    git clone https://github.com/yourusername/HoneywareX.git
    cd HoneywareX
+
+2. Start AI and Tunelling Server:
+   ```bash
+   bash ai_server.sh
