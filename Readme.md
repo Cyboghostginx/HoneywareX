@@ -15,6 +15,12 @@ Traditional static Unix honeypots like Cowrie lack the dynamic abilities needed 
 - **Other Utilities**: Implemetation of 2 commands system (AI required or AI not required) which helps to increase speed in the honeypot responses by automatically adapting to when AI is needed or not.
 
 ---
+[Wan2.1](https://github.com/Wan-Video/Wan2.1)
+## Requirements
+- **AI Host**: This is where our model(s) from [Ollama](https://ollama.com/library) to be used will be hosted.
+- **Low-Interaction Design**: Focuses on lightweight emulation to minimize resource usage while effectively capturing interactions.
+
+---
 
 ## Installation
 
@@ -26,3 +32,5 @@ Traditional static Unix honeypots like Cowrie lack the dynamic abilities needed 
 2. Start AI and Tunelling Server:
    ```bash
    sudo bash ai_server.sh
+
+
