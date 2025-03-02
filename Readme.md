@@ -1,6 +1,6 @@
 # HoneywareX
 
-HoneywareX is a **low-interaction honeypot** designed to simulate an SSH environment. It uses AI to emulate common SSH commands and responses, providing a realistic interface for monitoring and logging potential attacks. HoneywareX is lightweight, customizable, and ideal for gathering intelligence on unauthorized SSH access attempts.
+HoneywareX is a shell-based honeypot highly motivated by Cowrie, and "LLM in the shell" paper (Sladic et al., 2024). My master's project looks into building on existing researches in the field of honeypot in cybersecurity. I'm looking into how we can leverage RAG to enhance dynamic ability in Linux shell honeypot.
 
 ---
 
