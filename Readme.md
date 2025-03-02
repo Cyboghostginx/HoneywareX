@@ -17,7 +17,7 @@ Traditional static Unix honeypots like Cowrie lack the dynamic abilities needed 
 ---
 
 ## Requirements
-- **AI Host**: This is where our model(s) from <a href="https://ollama.com/library" target="_blank">Ollama</a> to be used will be hosted.
+- **AI Host**: This is where our model(s) from [Ollama](https://ollama.com/library) to be used will be hosted.
 - **Low-Interaction Design**: Focuses on lightweight emulation to minimize resource usage while effectively capturing interactions.
 
 ---
