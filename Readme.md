@@ -2,9 +2,14 @@
 
 ![A cute cat](https://github.com/Cyboghostginx/HoneywareX/blob/main/logo.png)
 
-HoneywareX is a shell-based honeypot highly motivated by Cowrie, and the "LLM in the shell" paper (Sladic et al., 2024). My master's project looks into building on existing research in the field of honeypots in cybersecurity. I'm looking into how to leverage RAG to enhance dynamic ability in Linux shell honeypots.
+HoneywareX is a PoC shell-based honeypot highly motivated by Cowrie, and the "LLM in the shell" paper (Sladic et al., 2024). My master's project looks into building on existing research in the field of honeypots in cybersecurity. I'm looking into how to leverage RAG to enhance dynamic ability in Linux shell honeypots.
 
 Traditional static Unix honeypots like Cowrie lack the dynamic abilities needed in real-life scenarios when engaging attackers during SSH access, such as lack of access to different network utilities commands like ping. I aim to increase the realism of this project by implementing other impressive abilities, and also make it easier for anyone to just test out on any system in just a few commands’ execution.
+
+To improve speed, the commands are classified into 3 part namely:
+- Native Commands: This commands can work without RAG intervention, mostly file management.
+- Non-Native Commands: These commands needs RAG intervention.
+- Invalid Commands: Any command that can't be found in a commands.txt file will be rendered invalid and would retun the comman not found instead of processing an invalid command which would introduce more resource usage in our honeypot.
 
 ---
 
