@@ -33,7 +33,7 @@ To improve speed, the commands are classified into 3 part namely:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/HoneywareX.git
+   git clone https://github.com/Cyboghostginx/HoneywareX.git
    cd HoneywareX
 
 2. Start AI and Tunelling Server:
