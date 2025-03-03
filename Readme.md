@@ -1,8 +1,8 @@
 # HoneywareX
 
-HoneywareX is a shell-based honeypot highly motivated by Cowrie, and the "LLM in the shell" paper (Sladic et al., 2024). My master's project looks into building on existing research in the field of honeypots in cybersecurity. I'm looking into how we can leverage RAG to enhance dynamic ability in Linux shell honeypots.
+HoneywareX is a shell-based honeypot highly motivated by Cowrie, and the "LLM in the shell" paper (Sladic et al., 2024). My master's project looks into building on existing research in the field of honeypots in cybersecurity. I'm looking into how to leverage RAG to enhance dynamic ability in Linux shell honeypots.
 
-Traditional static Unix honeypots like Cowrie lack the dynamic abilities needed in real-life scenarios when engaging attackers during SSH access, such as lack of access to different network utilities commands like ping. I aim to increase the realism of this project by implementing other impressive abilities, and also make it easier for anyone to just test out on their system in just a few commands’ execution.
+Traditional static Unix honeypots like Cowrie lack the dynamic abilities needed in real-life scenarios when engaging attackers during SSH access, such as lack of access to different network utilities commands like ping. I aim to increase the realism of this project by implementing other impressive abilities, and also make it easier for anyone to just test out on any system in just a few commands’ execution.
 
 ---
 
@@ -18,7 +18,7 @@ Traditional static Unix honeypots like Cowrie lack the dynamic abilities needed 
 
 ## Requirements
 - **AI Host**: This is where our model(s) from [Ollama](https://ollama.com/library) to be used will be hosted. You can rent a GPU on the server or use your local machine. At least 16 GB of RAM is required.
-- **Low-Interaction Design**: Focuses on lightweight emulation to minimize resource usage while effectively capturing interactions.
+- **Client Host**: This is where to access the ssh and test out the honeypot
 
 ---
 
@@ -30,6 +30,12 @@ Traditional static Unix honeypots like Cowrie lack the dynamic abilities needed 
    cd HoneywareX
 
 2. Start AI and Tunelling Server:
+   ```bash
+   sudo bash ai_server.sh
+
+Note: The tunnelling part of this script is only required to use NGROK to port out Ollama's 11434 port from any server we would like to host our models. Lightweight models up to 8B can easily be hosted on your local computer with 16GB RAM.
+
+3. Start AI and Tunelling Server:
    ```bash
    sudo bash ai_server.sh
 
