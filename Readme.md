@@ -39,8 +39,7 @@ To improve speed, the commands are classified into 3 part namely:
 2. Start AI and Tunelling Server:
    ```bash
    sudo bash ai_server.sh
-
-   [^1]: This is the footnote.
+[^1]: This is the footnote.
 
 Note: The tunnelling part of this script is only required to use NGROK to port out Ollama's 11434 port from any server we would like to host our models. Lightweight models up to 8B can easily be hosted on your local computer with 16GB RAM.
 
