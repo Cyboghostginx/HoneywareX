@@ -44,6 +44,10 @@ To improve speed, the commands are classified into 3 parts namely:
    ```bash
    python3 main.py
 
+4. Get into the provided SSH Access Honeypot:
+   ```bash
+   ssh honeypot@{ip_provided} -p 2222
+
 ---
 
 ## Acknowledgement
