@@ -9,17 +9,16 @@ Traditional static Unix honeypots like Cowrie lack the dynamic abilities needed 
 To improve speed, the commands are classified into 3 part namely:
 - Native Commands: This commands can work without RAG intervention, mostly file management.
 - Non-Native Commands: These commands needs RAG intervention.
-- Invalid Commands: Any command that can't be found in a commands.txt file will be rendered invalid and would retun the comman not found instead of processing an invalid command which would introduce more resource usage in our honeypot.
+- Invalid Commands: Any command that can't be found in a commands.txt file will be rendered invalid and would retun the command not found error instead of processing an invalid command which would introduce hallucination in RAG or induce more resource usage in our honeypot.
 
 ---
 
 ## Features
 
 - **AI-Driven Simulation**: Uses both the static and RAG ability to emulate common SSH commands and responses for a realistic experience.
-- **Low-Interaction Design**: Focuses on lightweight emulation to minimize resource usage while effectively capturing interactions.
 - **Logging and Monitoring**: Tracks user activity, including commands executed and session details. Also, allows the logged information to be viewed in a simple one page frontend.
 - **Lightweight Deployment**: Simple setup and low system requirements make it easy to deploy.
-- **Other Utilities**: Implemetation of 2 commands system (AI required or AI not required) which helps to increase speed in the honeypot responses by automatically adapting to when AI is needed or not.
+- **Other Utilities**: Implemetation of 3 commands system (AI required, AI not required, and Invalid) which helps to increase speed in the honeypot responses by automatically adapting to when AI is needed or not.
 
 ---
 
