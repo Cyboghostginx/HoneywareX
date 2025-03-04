@@ -56,6 +56,6 @@ I'm acknowledging entity/softwares used throughout this project, and are down be
 ---
 
 ## Conclusion
-This work is a PoC for my cureent master's project "Leveraging RAG-Based Prompt Engineering for Low-Interaction Network Honeypots"
+This work is still subjected to future changes as new discovery or errors are being detected from testing. AI has been used for the reworking of Cowrie's logic for simpler execution, and easy use.
 
 
