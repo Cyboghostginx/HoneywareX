@@ -1,6 +1,6 @@
 # HoneywareX
 
-![A cute cat](https://github.com/Cyboghostginx/HoneywareX/blob/main/logo.png)
+![honeywarex](https://github.com/Cyboghostginx/HoneywareX/blob/main/logo.png)
 
 HoneywareX is a PoC shell-based honeypot highly motivated by Cowrie, and the "LLM in the shell" paper (Sladic et al., 2024). My master's project looks into building on existing research in the field of honeypots in cybersecurity. I'm looking into how to leverage RAG to enhance dynamic ability in Linux shell honeypots.
 
@@ -15,7 +15,7 @@ To improve speed, the commands are classified into 3 part namely:
 
 ## Features
 
-- **AI-Driven Simulation**: Uses AI to emulate common SSH commands and responses for a realistic experience.
+- **AI-Driven Simulation**: Uses both the static and RAG ability to emulate common SSH commands and responses for a realistic experience.
 - **Low-Interaction Design**: Focuses on lightweight emulation to minimize resource usage while effectively capturing interactions.
 - **Logging and Monitoring**: Tracks user activity, including commands executed and session details. Also, allows the logged information to be viewed in a simple one page frontend.
 - **Lightweight Deployment**: Simple setup and low system requirements make it easy to deploy.
