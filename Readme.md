@@ -2,7 +2,7 @@
 
 ![honeywarex](https://github.com/Cyboghostginx/HoneywareX/blob/main/logo.png)
 
-HoneywareX is a PoC shell-based honeypot highly motivated by Cowrie, and the "LLM in the shell" paper (Sladic et al., 2024). My master's project looks into building on existing research in the field of honeypots in cybersecurity. I'm looking into how to leverage RAG to enhance dynamic ability in Linux shell honeypots.
+HoneywareX is a PoC shell-based honeypot motivated by Cowrie, and the "LLM in the shell" paper (Sladic et al., 2024). My master's project looks into building on existing research in the field of honeypots in cybersecurity. I'm looking into how to leverage RAG to enhance dynamic ability in Linux shell honeypots.
 
 Traditional static Unix honeypots like Cowrie lack the dynamic abilities needed in real-life scenarios when engaging attackers during SSH access, such as lack of access to different network utilities commands like ping. I aim to increase the realism of this project by implementing other impressive abilities, and also make it easier for anyone to just test out on any system in just a few commands’ execution.
 
@@ -43,6 +43,15 @@ To improve speed, the commands are classified into 3 part namely:
 3. Launch Work:
    ```bash
    python3 main.py
+
+---
+
+## Acknowledgement
+I'm acknowledging entity/softwares used throughout this project, and are down below:
+- Cowrie: I'm are reworking the logic from Cowrie in this project. Cowrie is a static shell honeypot which means that AI is not required resulting in lack of dynamic ability for certain commands.
+- Paramiko: Paramiko has been used in this project for the network level implementation to allow SSH access into the honeypot system.
+- Llamaindex: Llamaindex framework has been used for the implementation of RAG into this honeypot.
+- Ollama: This is a library of different open-source models that can easily be used on port 11434 after ollama installation.
 
 ---
 
