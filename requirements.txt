@@ -1,1 +1,10 @@
 
+paramiko==3.4.0
+cryptography==42.0.4
+llama-index==0.10.6
+llama-index-llms-ollama==0.1.1
+llama-index-embeddings-fastembed==0.1.2
+nest-asyncio==1.6.0
+tiktoken==0.6.0
+fastembed==0.2.1
+langchain==0.1.4
