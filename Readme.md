@@ -53,11 +53,12 @@ To improve speed, the commands are classified into 3 parts namely:
 ---
 
 ## Acknowledgement
-I'm acknowledging entity/softwares used throughout this project, and are down below:
+I'm acknowledging entity/softwares used throughout this project, and are listed below:
 - [Cowrie](https://github.com/cowrie/cowrie): I have reworked the logic from Cowrie in this project. Cowrie is a static shell honeypot which means that AI is not required resulting in lack of dynamic ability for certain commands.
 - [Paramiko](https://www.paramiko.org/): Paramiko has been used in this project for the network level implementation to allow SSH access into the honeypot system.
 - [LlamaIndex](https://docs.llamaindex.ai/en/stable/): Llamaindex framework has been used for the implementation of RAG into this honeypot.
 - [Ollama](https://ollama.com/library): This is a library of different open-source models that can easily be used on port 11434 after ollama installation.
+- Copilot AI used inside VScode for debugging
 
 ---
 
