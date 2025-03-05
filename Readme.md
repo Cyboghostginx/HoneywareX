@@ -26,7 +26,7 @@ To improve speed, the commands are classified into 3 parts namely:
 
 ## Requirements
 - **AI Host**: This is where our model(s) from [Ollama](https://ollama.com/library) to be used will be hosted. You can rent a GPU on the server or use your local machine. At least 16 GB of RAM is required. Also, ensure that you have properly installed Ollama as required from [here](https://ollama.com/download/linux) and pulled the necessary model you might wish to use, but for this project, we have stuck to llama3.2:3b for fast inferencing: To install any model in terminal use "ollama pull {model}". A file (ai_server.sh) has also been attached in this project for easy installation on Linux. Also, the (ai_server.sh) is able to use NGROK to tunnel out the port 11434 from any server you have decided to host the model.
-- **Client Host**: This is where you can access the SSH and test out the honeypot. You can as well run the main.py to fire up the project, and even open a new terminal and do the SSH access on the same network.
+- **Client Host**: This is where you can access the SSH and test out the honeypot. You can as well run the main.py to fire up the project, and even open a new terminal on this host to do the SSH access.
 
 ---
 
