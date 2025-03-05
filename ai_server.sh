@@ -1,6 +1,6 @@
 #! /bin/bash
 
-# Models To be tested in this project (Open-Source)
+# Models we can test in this project, many more in Ollama library (Open-Source)
 # -
 # TinyLlama - 1.1B (ollama pull tinyllama) - ❌
 # Gemma - 2B (ollama pull gemma:2b) - ✅
