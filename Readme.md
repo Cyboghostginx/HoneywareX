@@ -42,7 +42,7 @@ To improve speed, the commands are classified into 3 parts namely:
    pip install -r requirements.txt
    ```
    
-Or (OPTIONAL) if you want to host the model on an external GPU server, you can use the ai_server.sh script to install it on that server and it will also automatically tunnel out the port (11434) where the Ollama model is hosted
+   Or (OPTIONAL) if you want to host the model on an external GPU server, you can use the ai_server.sh script to install it on that server and it will also automatically tunnel out the port (11434) where       the Ollama model is hosted
 
    ```bash
    sudo bash ai_server.sh
