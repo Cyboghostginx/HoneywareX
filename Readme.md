@@ -33,13 +33,20 @@ To improve speed, the commands are classified into 3 parts namely:
 ## Installation
 
 1. Clone the repository:
+   Ensure to download Ollama from [here](https://ollama.com/download/linux), you can type in "ollama" in your terminal to see it it has been correctly installed.
+   
    ```bash
+   ollama pull Cyboghost/llama-linux
    git clone https://github.com/Cyboghostginx/HoneywareX.git
    cd HoneywareX
+   pip install -r requirements.txt
+   ```
+   
+Or (OPTIONAL) if you want to host the model on an external GPU server, you can use the ai_server.sh script to install it on that server and it will also automatically tunnel out the port (11434) where the Ollama model is hosted
 
-2. Start AI and Tunelling Server:
    ```bash
    sudo bash ai_server.sh
+   ```
 ***Note: The tunnelling part of this script is only required to use NGROK to port out Ollama's 11434 port from any server we would like to host our models. Lightweight models up to 8B can easily be hosted on your local computer with 16GB RAM. Whatever link you have concluded to be for your Ollama, either http://localhost:11434 or any link from external server will go into config.py***
 
 3. Launch Work:
