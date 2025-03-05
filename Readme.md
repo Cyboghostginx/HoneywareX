@@ -25,8 +25,8 @@ To improve speed, the commands are classified into 3 parts namely:
 ---
 
 ## Requirements
-- **AI Host**: This is where our model(s) from [Ollama](https://ollama.com/library) to be used will be hosted. You can rent a GPU on the server or use your local machine. At least 16 GB of RAM is required. Also, ensure that you have properly installed Ollama as required from [here](https://ollama.com/download/linux) and pulled the necessary model you might wish to use, but for this project, we have stuck to llama3.2:3b for fast inferencing: To install any model in terminal use "ollama pull {model}". A file (ai_server.sh) has also been attached in this project for easy installation on Linux. Also, the (ai_server.sh) is able to use NGROK to tunnel out the port 11434 from any server you have decided to host the model.
-- **Client Host**: This is where you can access the SSH and test out the honeypot. You can as well run the main.py to fire up the project, and even open a new terminal on this host to do the SSH access.
+- At least 16gb ram system (the higher the faster)
+- that's all...(:
 
 ---
 
@@ -42,20 +42,24 @@ To improve speed, the commands are classified into 3 parts namely:
    pip install -r requirements.txt
    ```
    
-   Or (OPTIONAL) if you want to host the model on an external GPU server, you can use the ai_server.sh script to install it on that server and it will also automatically tunnel out the port (11434) where       the Ollama model is hosted
+   ***Or (OPTIONALLY) if you want to host the model on an external GPU server, you can use run ai_server.sh script in that server to install it on that server and it will also automatically tunnel out the      port (11434) where the Ollama model is hosted. Note: The tunnelling part of this script is only required to use NGROK to port out Ollama's 11434 port from any server we would like to host our models.        Lightweight models up to 8B can easily be hosted on your local computer with 16GB RAM. Whatever link you have concluded to be for your Ollama, either http://localhost:11434 or any link from external         server will go into config.py***
 
    ```bash
    sudo bash ai_server.sh
    ```
-***Note: The tunnelling part of this script is only required to use NGROK to port out Ollama's 11434 port from any server we would like to host our models. Lightweight models up to 8B can easily be hosted on your local computer with 16GB RAM. Whatever link you have concluded to be for your Ollama, either http://localhost:11434 or any link from external server will go into config.py***
+   
 
-3. Launch Work:
+2. Launch Work:
+   
    ```bash
    python3 main.py
+   ```
 
-4. Get into the provided SSH Access Honeypot:
+3. Get into the provided SSH Access Honeypot:
    ```bash
    ssh honeypot@{ip_provided} -p 2222
+   ```
+4. Then you can always view the logged information by firing up the index.html file in the frontend folder
 
 ---
 
