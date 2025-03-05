@@ -6,7 +6,7 @@ HoneywareX is a PoC shell-based honeypot motivated by Cowrie, and the "LLM in th
 
 Traditional static Unix honeypots like Cowrie lack the dynamic abilities needed in real-life scenarios when engaging attackers during SSH access, such as lack of access to different network utilities commands like netcat, netstat etc. I aim to increase the realism of this project by implementing other impressive abilities, and also make it easier for anyone to just test out on any system in just a few commands’ execution.
 
-##***NB: It is also important to note that Copilot AI in VScode has been thoroughly used throughout this project for the reworking of the static honeypot logic from Cowrie, and also to add few additional features because of time, and also the complexity of that area of this project. My own work only focused on the implementation of RAG using Llamaindex and Ollama. (:***
+***NB: It is also important to note that Copilot AI in VScode has been thoroughly used throughout this project for the reworking of the static honeypot logic from Cowrie, and also to add few additional features because of time, and also the complexity of that area of this project. My own work only focused on the implementation of RAG using Llamaindex and Ollama. (:***
 
 To improve speed, the commands are classified into 3 parts namely:
 - Native Commands: These commands can work without RAG intervention, mostly file management.
