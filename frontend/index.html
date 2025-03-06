@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our SSH Honeypot Logs</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --background: #0a0e17;
+            --surface: #141b2d;
+            --surface-light: #1f2940;
+            --accent: #4e7df9;
+            --accent-hover: #6a93ff;
+            --text-primary: #e0e6ff;
+            --text-secondary: #a2aecc;
+            --danger: #ff5a5f;
+            --success: #4caf50;
+            --warning: #ffb347;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(78, 125, 249, 0.03) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(78, 125, 249, 0.03) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        header {
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 2.4em;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 15px rgba(78, 125, 249, 0.2);
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: var(--text-secondary);
+            font-size: 1.6em;
+            margin: 30px 0 20px 0;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        h2 i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+
+        .card {
+            background-color: var(--surface);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            margin-bottom: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.07);
+        }
+
+        .card-header {
+            padding: 5px 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background-color: rgba(31, 41, 64, 0.5);
+        }
+
+        .card-body {
+            padding: 20px 25px;
+        }
+
+        table.dataTable {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 0;
+            background-color: transparent;
+        }
+
+        table.dataTable thead th {
+            background-color: var(--surface-light);
+            color: var(--text-primary);
+            font-weight: 500;
+            padding: 15px;
+            text-transform: uppercase;
+            font-size: 0.8em;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        table.dataTable tbody td {
+            padding: 15px;
+            color: var(--text-secondary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            transition: background-color 0.2s;
+        }
+
+        table.dataTable tbody tr:hover td {
+            background-color: rgba(78, 125, 249, 0.05);
+            color: var(--text-primary);
+        }
+
+        .btn {
+            background-color: var(--surface-light);
+            color: var(--text-primary);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn i {
+            margin-right: 6px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(78, 125, 249, 0.25);
+        }
+
+        .btn-secondary {
+            background-color: var(--surface-light);
+            margin-bottom: 20px;
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(31, 41, 64, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background-color: rgba(76, 175, 80, 0.15);
+            color: var(--success);
+        }
+
+        .status-failed {
+            background-color: rgba(255, 90, 95, 0.15);
+            color: var(--danger);
+        }
+
+        .ip-address {
+            display: flex;
+            align-items: center;
+        }
+
+        .ip-address i {
+            margin-right: 8px;
+            color: var(--accent);
+            opacity: 0.7;
+        }
+
+        .session-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-item {
+            background-color: var(--surface-light);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-item-label {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .info-item-value {
+            color: var(--text-primary);
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_processing,
+        .dataTables_wrapper .dataTables_paginate {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        .dataTables_wrapper .dataTables_filter input,
+        .dataTables_wrapper .dataTables_length select {
+            background-color: var(--surface-light);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 6px;
+            outline: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s;
+        }
+
+        .dataTables_wrapper .dataTables_filter input:focus,
+        .dataTables_wrapper .dataTables_length select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(78, 125, 249, 0.25);
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            color: var(--text-secondary) !important;
+            background-color: var(--surface-light) !important;
+            border: none !important;
+            margin: 0 4px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background-color: rgba(78, 125, 249, 0.2) !important;
+            color: var(--text-primary) !important;
+            transform: translateY(-2px);
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background-color: var(--accent) !important;
+            color: white !important;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        #detailsView {
+            display: none;
+        }
+
+        .glassmorphic {
+            background: rgba(20, 27, 45, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glow-border {
+            position: relative;
+        }
+
+        .glow-border::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            opacity: 0.5;
+        }
+
+        /* dark themed DataTables overrides */
+        .dataTables_wrapper .dataTables_length,
+        .dataTables_wrapper .dataTables_filter,
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_processing,
+        .dataTables_wrapper .dataTables_paginate {
+            color: var(--text-secondary);
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+            color: white !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>SSH Honeypot Logging</h1>
+            <p class="subtitle">Real-time monitoring</p>
+        </header>
+
+        <div id="mainView">
+            <div class="card glassmorphic glow-border">
+                <div class="card-header">
+                    <h2><i class="fas fa-terminal"></i> Attack Sessions</h2>
+                </div>
+                <div class="card-body">
+                    <table id="sessionsTable" class="display">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>IP Address</th>
+                                <th>Username</th>
+                                <th>Start Time</th>
+                                <th>End Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="detailsView">
+            <button id="backButton" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to
+                Sessions</button>
+
+            <div class="card glassmorphic glow-border">
+                <div class="card-header">
+                    <h2><i class="fas fa-info-circle"></i> Session Details</h2>
+                </div>
+                <div class="card-body">
+                    <div id="sessionInfo" class="session-info"></div>
+                </div>
+            </div>
+
+            <div class="card glassmorphic glow-border">
+                <div class="card-header">
+                    <h2><i class="fas fa-code"></i> Commands Executed</h2>
+                </div>
+                <div class="card-body">
+                    <table id="sessionCommandsTable" class="display">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Command</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card glassmorphic glow-border">
+                <div class="card-header">
+                    <h2><i class="fas fa-key"></i> Password Attempts</h2>
+                </div>
+                <div class="card-body">
+                    <table id="passwordAttemptsTable" class="display">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Timestamp</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // configuration for data loading
+            const CONFIG = {
+                RELOAD_INTERVAL: 30000,  // 30 seconds between full reloads
+            };
+
+            // add manual reload button to the header
+            $('header').append(`
+                <div class="manual-reload-container" style="position: absolute; top: 10px; right: 10px;">
+                    <button id="manualReloadBtn" class="btn btn-primary">
+                        <i class="fas fa-sync"></i> Reload Data
+                    </button>
+                </div>
+            `);
+
+            // function to show a temporary notification
+            function showNotification(message, type = 'info') {
+                // remove any existing notifications
+                $('.data-notification').remove();
+
+                // create notification element
+                const notificationHtml = `
+                    <div class="data-notification" style="
+                        position: fixed; 
+                        top: 20px; 
+                        right: 20px; 
+                        background-color: ${type === 'error' ? '#ff5a5f' : '#4caf50'};
+                        color: white; 
+                        padding: 10px 20px; 
+                        border-radius: 5px; 
+                        z-index: 1000;
+                        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                    ">
+                        ${message}
+                    </div>
+                `;
+
+                // append and auto-remove
+                $('body').append(notificationHtml);
+                setTimeout(() => $('.data-notification').fadeOut(300, function() { $(this).remove(); }), 3000);
+            }
+
+            // global state
+            let activeSessionData = null;
+            let allCommands = [];
+            let isDetailView = false;
+
+            // initialize DataTables with enhanced error handling
+            const sessionsTable = $('#sessionsTable').DataTable({
+                ajax: {
+                    url: 'sessions.json',
+                    dataSrc: function(json) {
+                        // check if data is empty or undefined
+                        if (!json || json.length === 0) {
+                            showNotification('No session data available', 'error');
+                            return [];
+                        }
+                        return json;
+                    },
+                    error: function(xhr, error, thrown) {
+                        // more detailed error handling
+                        let errorMessage = 'Failed to load sessions';
+                        if (xhr.status === 404) {
+                            errorMessage = 'Sessions data file not found';
+                        } else if (xhr.status === 500) {
+                            errorMessage = 'Server error while loading sessions';
+                        }
+                        showNotification(errorMessage, 'error');
+                        return [];
+                    }
+                },
+                columns: [
+                    { data: 'id' },
+                    {
+                        data: 'ip',
+                        render: function (data) {
+                            return `<div class="ip-address"><i class="fas fa-globe"></i>${data || 'N/A'}</div>`;
+                        }
+                    },
+                    { 
+                        data: 'username',
+                        render: function(data) {
+                            return data || 'Unknown';
+                        }
+                    },
+                    { 
+                        data: 'start_time',
+                        render: function(data) {
+                            return data ? new Date(data).toLocaleString() : 'N/A';
+                        }
+                    },
+                    {
+                        data: 'end_time',
+                        render: function (data) {
+                            return data ? 
+                                new Date(data).toLocaleString() : 
+                                '<span class="status-badge status-success">Active</span>';
+                        }
+                    },
+                    {
+                        data: 'success',
+                        render: function (data) {
+                            return data ?
+                                '<span class="status-badge status-success">Success</span>' :
+                                '<span class="status-badge status-failed">Failed</span>';
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function (data, type, row) {
+                            return '<button class="btn btn-primary details-btn" data-id="' + row.id + '"><i class="fas fa-search"></i> View Details</button>';
+                        }
+                    }
+                ],
+                pageLength: 10,
+                order: [[3, 'desc']],
+                searching: true,
+                paging: true,
+                info: true,
+                responsive: true,
+                language: {
+                    emptyTable: "No sessions available",
+                    zeroRecords: "No matching sessions found"
+                }
+            });
+
+            // commands table initialization
+            const sessionCommandsTable = $('#sessionCommandsTable').DataTable({
+                columns: [
+                    { data: 'id' },
+                    { data: 'command' },
+                    { 
+                        data: 'timestamp',
+                        render: function(data) {
+                            return data ? new Date(data).toLocaleString() : 'N/A';
+                        }
+                    }
+                ],
+                pageLength: 10,
+                order: [[2, 'desc']],
+                searching: true,
+                paging: true,
+                info: true,
+                language: {
+                    emptyTable: "No commands recorded",
+                    zeroRecords: "No matching commands found"
+                }
+            });
+
+            // password attempts table initialization
+            const passwordAttemptsTable = $('#passwordAttemptsTable').DataTable({
+                columns: [
+                    { data: 'id' },
+                    { data: 'username' },
+                    { data: 'password' },
+                    { 
+                        data: 'timestamp',
+                        render: function(data) {
+                            return data ? new Date(data).toLocaleString() : 'N/A';
+                        }
+                    },
+                    {
+                        data: 'success',
+                        render: function (data) {
+                            return data ?
+                                '<span class="status-badge status-success">Success</span>' :
+                                '<span class="status-badge status-failed">Failed</span>';
+                        }
+                    }
+                ],
+                pageLength: 10,
+                order: [[3, 'desc']],
+                searching: true,
+                paging: true,
+                info: true,
+                language: {
+                    emptyTable: "No password attempts recorded",
+                    zeroRecords: "No matching password attempts found"
+                }
+            });
+
+            // function to fetch commands
+            function fetchCommands() {
+                $.ajax({
+                    url: 'commands.json',
+                    dataType: 'json',
+                    cache: false,
+                    success: function(data) {
+                        allCommands = data || [];
+                        showNotification(`Loaded ${allCommands.length} commands`);
+                    },
+                    error: function() {
+                        showNotification('Failed to load commands', 'error');
+                        allCommands = [];
+                    }
+                });
+            }
+
+            // manual reload button handler
+            $('#manualReloadBtn').on('click', function() {
+                const $btn = $(this);
+                const $icon = $btn.find('i');
+                
+                // disable button during reload
+                $btn.prop('disabled', true);
+                $icon.addClass('fa-spin');
+
+                // reload sessions
+                sessionsTable.ajax.reload(function(json) {
+                    $btn.prop('disabled', false);
+                    $icon.removeClass('fa-spin');
+                    
+                    // check if data was loaded
+                    if (json && json.length > 0) {
+                        showNotification('Data refreshed successfully');
+                    } else {
+                        showNotification('No new data available', 'error');
+                    }
+                }, false);
+
+                // fetch commands
+                fetchCommands();
+
+                // update active session if in detail view
+                if (isDetailView && activeSessionData) {
+                    updateActiveSessionView();
+                }
+            });
+
+            // detailed session view update function
+            function updateActiveSessionView() {
+                $.ajax({
+                    url: 'sessions.json',
+                    dataType: 'json',
+                    cache: false,
+                    success: function (data) {
+                        const updatedSession = data.find(session => session.id === activeSessionData.id);
+                        
+                        if (updatedSession) {
+                            // filter auth attempts for this specific session
+                            const authAttempts = (updatedSession.auth_attempts || [])
+                                .filter(attempt => attempt.session_id === updatedSession.id);
+
+                            // update tables and session info
+                            const sessionCommands = allCommands.filter(cmd => cmd.session_id === updatedSession.id);
+                            
+                            sessionCommandsTable.clear().rows.add(sessionCommands).draw(false);
+                            passwordAttemptsTable.clear().rows.add(authAttempts).draw(false);
+                            $('#sessionInfo').html(createSessionInfoHTML(updatedSession));
+                        }
+                    },
+                    error: function() {
+                        showNotification('Failed to update session details', 'error');
+                    }
+                });
+            }
+
+            // helper function to create session info HTML
+            function createSessionInfoHTML(session) {
+                const statusBadge = session.success ?
+                    '<span class="status-badge status-success">Success</span>' :
+                    '<span class="status-badge status-failed">Failed</span>';
+
+                return `
+                    <div class="info-item">
+                        <span class="info-item-label">Session ID</span>
+                        <span class="info-item-value">${session.id || 'N/A'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-item-label">IP Address</span>
+                        <span class="info-item-value"><i class="fas fa-globe"></i> ${session.ip || 'Unknown'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-item-label">Username</span>
+                        <span class="info-item-value"><i class="fas fa-user"></i> ${session.username || 'Unknown'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-item-label">Start Time</span>
+                        <span class="info-item-value"><i class="fas fa-clock"></i> ${session.start_time ? new Date(session.start_time).toLocaleString() : 'N/A'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-item-label">End Time</span>
+                        <span class="info-item-value"><i class="fas fa-clock"></i> ${session.end_time ? new Date(session.end_time).toLocaleString() : 'Still Active'}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-item-label">Status</span>
+                        <span class="info-item-value">${statusBadge}</span>
+                    </div>
+                `;
+            }
+
+            // session details handler
+            $('#sessionsTable tbody').on('click', '.details-btn', function () {
+                const rowData = sessionsTable.row($(this).closest('tr')).data();
+                
+                // mark that we're in detail view
+                isDetailView = true;
+                activeSessionData = rowData;
+
+                // hide main view, show details
+                $('#mainView').hide();
+                $('#detailsView').show();
+
+                // fetch and display session details
+                const sessionCommands = allCommands.filter(cmd => cmd.session_id === rowData.id);
+                const authAttempts = (rowData.auth_attempts || [])
+                    .filter(attempt => attempt.session_id === rowData.id);
+
+                // update tables and session info
+                sessionCommandsTable.clear().rows.add(sessionCommands).draw();
+                passwordAttemptsTable.clear().rows.add(authAttempts).draw();
+                $('#sessionInfo').html(createSessionInfoHTML(rowData));
+            });
+
+            // back button handler
+            $('#backButton').on('click', function () {
+                // reset detail view state
+                isDetailView = false;
+                activeSessionData = null;
+
+                // show main view, hide details
+                $('#detailsView').hide();
+                $('#mainView').show();
+            });
+
+            // initial data fetch
+            fetchCommands();
+        });
+    </script>
+</body>
+
+</html>
