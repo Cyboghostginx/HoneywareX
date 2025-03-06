@@ -4,7 +4,7 @@ nest-asyncio>=1.6.0
 tiktoken>=0.6.0
 fastembed>=0.2.2
 langchain>=0.2.0
-llama-index>=0.10.20
+llama-index-core
 llama-index-node-parser>=0.1.5
 llama-index-retrievers>=0.1.5
 llama-index-memory>=0.1.4
