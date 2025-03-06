@@ -4,4 +4,7 @@ nest-asyncio
 tiktoken
 fastembed
 langchain
-llama-index-core
+llama-index
+llama-index-llms-ollama
+llama-index-embeddings-ollama
+llama-index-embeddings-fastembed
