@@ -1,6 +1,6 @@
 # HoneywareX
 
-![honeywarex](https://github.com/Cyboghostginx/HoneywareX/blob/main/logo.png)
+![honeywarex](https://github.com/Cyboghostginx/HoneywareX/blob/main/assets/logo.png)
 
 HoneywareX is a PoC shell-based honeypot motivated by Cowrie, and the "LLM in the shell" paper (Sladic et al., 2024). My master's project looks into building on existing research in the field of honeypots in cybersecurity. I'm looking into how to leverage RAG to enhance dynamic ability in Linux shell honeypots.
 
