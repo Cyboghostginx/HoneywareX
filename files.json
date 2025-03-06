@@ -1,0 +1,76 @@
+{
+    "bin": {
+      "bash": "Binary for the Bash shell.",
+      "ls": "Binary for listing directory contents.",
+      "cat": "Binary for concatenating and displaying file content.",
+      "mkdir": "Binary for creating directories.",
+      "rm": "Binary for removing files or directories.",
+      "cp": "Binary for copying files.",
+      "mv": "Binary for moving files.",
+      "grep": "Binary for pattern searching.",
+      "chmod": "Binary for changing file permissions.",
+      "chown": "Binary for changing file ownership.",
+      "ps": "Binary for displaying process status.",
+      "kill": "Binary for terminating processes.",
+      "wget": "Binary for downloading files from the web.",
+      "curl": "Binary for transferring data with URLs.",
+      "find": "Binary for finding files.",
+      "nano": "Simple text editor.",
+      "vim": "Vi improved text editor."
+    },
+    "boot": {
+      "vmlinuz-5.15.0-76-generic": "Linux kernel image.",
+      "initrd.img-5.15.0-76-generic": "Initial RAM disk for booting.",
+      "vmlinuz-5.15.0-75-generic": "Previous Linux kernel image.",
+      "initrd.img-5.15.0-75-generic": "Previous initial RAM disk.",
+      "grub": {
+        "grub.cfg": "# GRUB configuration file\nDEFAULT_TIMEOUT=5\nDEFAULT_ENTRY=\"Ubuntu, with Linux 5.15.0-76-generic\"\n\nmenuentry \"Ubuntu, with Linux 5.15.0-76-generic\" {\n linux /boot/vmlinuz-5.15.0-76-generic root=UUID=aad9e307-0628-4c7f-b546-a62f8b4b645e ro quiet splash\n initrd /boot/initrd.img-5.15.0-76-generic\n}",
+        "themes": {
+          "ubuntu": {
+            "theme.txt": "GRUB theme configuration."
+          }
+        }
+      }
+    },
+    "etc": {
+      "passwd": "root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\nsys:x:3:3:sys:/dev:/usr/sbin/nologin\nhoneypot:x:1000:1000:Honeypot User:/home/honeypot:/bin/bash\nuser1:x:1001:1001:Regular User:/home/user1:/bin/bash",
+      "hostname": "server01",
+      "hosts": "127.0.0.1 localhost\n127.0.1.1 server01\n\n# The following lines are desirable for IPv6 capable hosts\n::1     ip6-localhost ip6-loopback\nfe00::0 ip6-localnet",
+      "ssh": {
+        "sshd_config": "# SSH daemon configuration\nPort 22\nPermitRootLogin no\nPasswordAuthentication yes\nX11Forwarding no"
+      },
+      "resolv.conf": "nameserver 8.8.8.8\nnameserver 8.8.4.4"
+    },
+    "home": {
+      "honeypot": {
+        ".bashrc": "# ~/.bashrc: executed by bash for non-login shells\n# see /usr/share/doc/bash/examples/startup-files for examples\n\nalias ls='ls --color=auto'\nalias ll='ls -la'\nalias grep='grep --color=auto'",
+        "readme.txt": "Welcome to the server!\n\nThis machine is used for development and testing purposes.\nPlease do not make changes without consulting the admin team."
+      }
+    },
+    "var": {
+      "log": {
+        "auth.log": "Feb 27 09:23:45 server01 sshd[1234]: Accepted password for honeypot from 192.168.1.10 port 49812 ssh2\nFeb 27 14:22:35 server01 sshd[1235]: Accepted password for honeypot from 192.168.1.15 port 51432 ssh2",
+        "syslog": "Feb 27 08:00:01 server01 systemd[1]: Started Daily apt upgrade and clean activities."
+      },
+      "www": {
+        "html": {
+          "index.html": "<html><head><title>Test Page</title></head><body><h1>It works!</h1></body></html>"
+        }
+      }
+    },
+    "usr": {
+      "bin": {
+        "python3": "Python 3 interpreter binary"
+      },
+      "local": {
+        "bin": {}
+      }
+    },
+    "tmp": {},
+    "opt": {},
+    "dev": {
+      "null": "Special file that discards all data written to it",
+      "zero": "Special file that provides null characters",
+      "random": "Special file that provides random data"
+    }
+  }
