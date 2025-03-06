@@ -63,6 +63,11 @@ To improve speed, the commands are classified into 3 parts namely:
 
 ---
 
+## Common errors
+If you are having issues with python, ensure you have python 11, and also ensure pip is using python 11
+
+---
+
 ## Acknowledgement
 I'm acknowledging entity/softwares used throughout this project, and are listed below:
 - [Cowrie](https://github.com/cowrie/cowrie): I have reworked the logic from Cowrie in this project. Cowrie is a static shell honeypot which means that AI is not required resulting in lack of dynamic ability for certain commands.
