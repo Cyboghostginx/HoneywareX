@@ -64,7 +64,7 @@ To improve speed, the commands are classified into 3 parts namely:
 ---
 
 ## Common errors
-If you are having issues with python, ensure you have python 11, and also ensure pip is using python 11
+If you are having issues with python when installing requirements, ensure you have python 11, and also ensure pip is using python 11
 
 ---
 
