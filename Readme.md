@@ -73,7 +73,12 @@ I'm acknowledging entity/softwares used throughout this project, and are listed 
 
 ---
 
+## Future Work
+This project will further look into native commands that are yet to be implemented, and also refine the AI implementation method. Maybe full finetuning of a model could better enhance the dynamic ability of this honeypot.
+
+---
+
 ## Conclusion
-This work is still subjected to future changes as new discovery or errors are being detected from testing. AI has been used extensively for the reworking of Cowrie's logic for simpler execution, and easy use.
+This work is still subject to future changes as new discoveries or errors are being detected from testing. AI has been used extensively for the reworking of Cowrie's logic for simpler execution and easy use.
 
 
