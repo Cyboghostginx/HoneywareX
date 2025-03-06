@@ -1,0 +1,85 @@
+ls -la
+cd ~
+pwd
+cat /etc/hostname
+echo "Hello World"
+mkdir test_dir
+touch new_file.txt
+whoami
+uname -a
+ps aux | head -5
+date
+history | tail -5
+hostname
+groups
+uptime
+file /bin/bash
+wc -l /etc/passwd
+head -3 /etc/passwd
+tail -3 /etc/passwd
+du -sh /home
+df -h
+stat /etc/passwd
+ip addr
+netstat -tulpn
+chmod 755 test_dir
+chown $(whoami) new_file.txt
+grep "root" /etc/passwd
+sort /etc/passwd | head -3
+uniq -c <<< $'apple\napple\nbanana'
+who
+ping -c 2 8.8.8.8
+ifconfig
+wget --version
+curl --version
+nc -h
+ssh -V
+scp -V
+sftp -V
+nmap --version
+dig google.com
+nslookup google.com
+host google.com
+traceroute -m 5 google.com
+ip route
+lsof -i
+lsmod | head -5
+dmesg | tail -5
+systemctl status ssh
+systemctl list-units --type=service --state=running | head -5
+journalctl --no-pager -n 5
+top -n 1 -b | head -10
+free -h
+lscpu | head -5
+lspci | head -2
+lsusb | head -2
+lsblk
+fdisk -l | head -5
+mount | head -5
+apt list --installed | head -5
+find /etc -name "*.conf" -type f | head -5
+locate passwd | head -3
+tar --version
+gzip --version
+rsync --version
+awk --version
+sed --version
+cut --version
+tr --help | head -5
+diff --version
+vi --version | head -3
+nano --version
+less --version
+strings /bin/ls | head -5
+sudo -V
+bash --version
+env | head -5
+printenv | head -5
+docker --version
+python3 --version
+gcc --version
+logger "Test message" && grep "Test message" /var/log/syslog | tail -1
+last | head -5
+lastlog | head -5
+watch --version
+ldd /bin/ls | head -5
