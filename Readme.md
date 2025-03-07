@@ -36,7 +36,7 @@ To improve speed, the commands are classified into 3 parts namely:
    Ensure to download Ollama from [here](https://ollama.com/download/linux), you can type in "ollama" in your terminal to see it it has been correctly installed.
    
    ```bash
-   ollama pull Cyboghost/llama-linux
+   ollama pull Cyboghost/llama-linux:latest
    git clone https://github.com/Cyboghostginx/HoneywareX.git
    cd HoneywareX
    pip install -r requirements.txt
