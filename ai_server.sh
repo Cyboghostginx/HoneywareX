@@ -6,7 +6,7 @@
 # Qwen 2.5 - 3B (ollama pull qwen2.5:3b) - 
 # -
 # Dolphin3 - 8B (ollama pull dolphin3) - 
-# Llama-linux - 8B (ollama pull Cyboghost/llama-linux) - Tuned by me specifically for this project
+# Llama-linux - 8B (ollama pull Cyboghost/llama-linux:latest) - Tuned by me specifically for this project
 # Llama3.1 - 8B (ollama run llama3.1) - 
 # Gemma - 9B (ollama pull gemma2:latest) - 
 
