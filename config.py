@@ -28,7 +28,7 @@ FRONTEND_URL = f"http://{FRONTEND_HOST}:{FRONTEND_PORT}"
 
 # RAG configuration
 RAG_ENABLED = True
-RAG_MODEL = "Cyboghost/llama-linux" #Cyboghost/llama-linux
+RAG_MODEL = "Cyboghost/llama-linux:latest" #Cyboghost/llama-linux:latest
 RAG_COMMANDS_FILE = os.path.join(BASE_DIR, './rag/data/commands_doc.txt')
 RAG_STORAGE_DIR = os.path.join(BASE_DIR, './rag/data/vector_store')  # Vector store directory
 RAG_OLLAMA_URL = "http://localhost:11434"
