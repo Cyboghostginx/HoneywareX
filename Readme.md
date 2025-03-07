@@ -8,7 +8,7 @@ Traditional static Unix honeypots like Cowrie lacks the dynamic abilities needed
 
 ***NB: It is also important to note that Copilot AI in VScode has been thoroughly used throughout this project for the reworking of the static honeypot logic from Cowrie, and also to add few additional features because of little time left to submit my paper, and also the complexity of that area of this project. My own work only focused on the implementation of RAG using Llamaindex and Ollama. (:***
 
-To improve speed, the commands are classified into 3 parts namely:
+To improve speed and accuracy, the commands are classified into 3 parts namely:
 - Native Commands: These commands can work without RAG intervention, mostly file management.
 - Non-Native Commands: These commands need RAG intervention.
 - Invalid Commands: Any command that can't be found in a commands.txt file will be rendered invalid and would return the command not found error instead of processing an invalid command which would introduce hallucination in RAG or induce more resource usage in our honeypot.
@@ -27,6 +27,11 @@ To improve speed, the commands are classified into 3 parts namely:
 ## Requirements
 - At least 16gb ram system (the higher the faster)
 - that's all...(:
+
+You can also just test out my tuned independent model from llama3.1 8B parameter version on Ollama. Make sure Ollama is installed, and then you can use the command below to inference the model right from the terminal.
+```bash
+   ollama run Cyboghost/llama-linux:latest
+```
 
 ---
 
