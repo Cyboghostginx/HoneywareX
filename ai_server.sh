@@ -20,12 +20,12 @@ sleep 3
 echo -e "\n"
 
 # Pull Ollama's models needed from repository
-ollama pull Cyboghost/llama-linux # any Model to be used can be changed here
+ollama pull Cyboghost/llama-linux:latest # any Model to be used can be changed here
 sleep 3
 # We can start with these 2 model for testing and add on later.
 
 # cron job for ollama run llama3.2 ""
-(crontab -l 2>/dev/null; echo '*/5 * * * * ollama run Cyboghost/llama-linux""') | crontab -
+(crontab -l 2>/dev/null; echo '*/5 * * * * ollama run Cyboghost/llama-linux:latest""') | crontab -
 
 # install NGROK
 curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
