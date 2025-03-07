@@ -32,6 +32,7 @@ You can also just test out my tuned independent model from llama3.1 8B parameter
 ```bash
    ollama run Cyboghost/llama-linux:latest
 ```
+You can check out all my tuned models on [here](https://ollama.com/Cyboghost)
 
 ---
 
