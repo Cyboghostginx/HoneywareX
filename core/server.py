@@ -1,7 +1,7 @@
 """
 SSH server implementation for the honeypot with fixed tab completion and arrow keys
 """
-import socket, threading, paramiko, os, time
+import socket, threading, paramiko, os, time, datetime, random
 from utils.log_setup import logger
 from core.database import log_session_start, log_session_end, log_command, log_auth_attempt, get_db_connection
 from config import USERNAME, PASSWORD, RAG_STREAM_OUTPUT, RAG_TOKEN_DELAY
@@ -94,14 +94,38 @@ def handle_connection(client, addr, command_processor, host_key):
         command_processor.initialize_session(server.session_id)
         logger.info(f"Initialized session {server.session_id} for client {addr[0]}")
 
+        # get current time for system information
+        current_time = datetime.datetime.now()
+        current_time_str = current_time.strftime("%a %b %d %I:%M:%S %p %Z %Y")
+
+        # generate last login time (1 day ago)
+        last_login_time = current_time - datetime.timedelta(days=1)
+        last_login_str = last_login_time.strftime("%a %b %d %H:%M:%S %Y")
+
+        random_ip = f"{random.randint(1, 223)}.{random.randint(0, 255)}.{random.randint(0, 255)}.{random.randint(1, 254)}"
+
         # send welcome message
-        channel.send("Welcome to Ubuntu 20.04.4 LTS (GNU/Linux 5.4.0-107-generic x86_64)\r\n")
-        channel.send("==\r\n")
-        channel.send("Adetayo Adebimpe (ama59@hi.is)\r\n")
-        channel.send("==\r\n")
-        channel.send("This project looks into how we can leverage RAG to enhance context awareness where dynamic ability is required in linux SSH honeypot.\r\n")
-        channel.send("==\r\n\n")
-        
+        channel.send("Welcome to Ubuntu 24.04.1 LTS (GNU/Linux 6.8.0-54-generic x86_64)\r\n\r\n")
+        channel.send(" * Documentation:  https://help.ubuntu.com\r\n")
+        channel.send(" * Management:     https://landscape.canonical.com\r\n")
+        channel.send(" * Support:        https://ubuntu.com/pro\r\n\r\n")
+        channel.send(f" System information as of {current_time_str}\r\n\r\n")
+        channel.send("  System load:  0.08                Processes:              249\r\n")
+        channel.send("  Usage of /:   10.1% of 249.45GB   Users logged in:        0\r\n")
+        channel.send("  Memory usage: 16%                 IPv4 address for ens18: 10.0.0.51\r\n")
+        channel.send("  Swap usage:   0%\r\n\r\n")
+        channel.send(" * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s\r\n")
+        channel.send("   just raised the bar for easy, resilient and secure K8s cluster deployment.\r\n\r\n")
+        channel.send("   https://ubuntu.com/engage/secure-kubernetes-at-the-edge\r\n\r\n")
+        channel.send("Expanded Security Maintenance for Applications is not enabled.\r\n\r\n")
+        channel.send("144 updates can be applied immediately.\r\n")
+        channel.send("1 of these updates is a standard security update.\r\n")
+        channel.send("To see these additional updates run: apt list --upgradable\r\n\r\n")
+        channel.send("5 additional security updates can be applied with ESM Apps.\r\n")
+        channel.send("Learn more about enabling ESM Apps service at https://ubuntu.com/esm\r\n\r\n\r\n")
+        channel.send("*** System restart required ***\r\n")
+        channel.send(f"Last login: {last_login_str} from {random_ip}\r\n\r\n")
+                
         # send initial prompt
         prompt = command_processor.get_prompt(server.session_id)
         channel.send(prompt)
