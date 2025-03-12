@@ -1,16 +1,15 @@
-
 """
 Main file for SSH honeypot
 """
 import sys, signal, threading, os, subprocess
-from config import HOST, PORT, USERNAME, PASSWORD, FILESYSTEM_DIR, RAG_ENABLED, RAG_MODEL, RAG_OLLAMA_URL, FRONTEND_DIR, FRONTEND_HOST, FRONTEND_PORT
+from config import HOST, PORT, USERNAME, PASSWORD, FILESYSTEM_DIR, AI_ENABLED, AI_MODE, RAG_MODEL, RAG_OLLAMA_URL, FRONTEND_DIR, FRONTEND_HOST, FRONTEND_PORT
 from utils.log_setup import logger
 from core.database import init_db
 from core.virtual_filesystem import VirtualFilesystem
 from core.command_processor import CommandProcessor
 from core.server import start_server, stop_event
 from utils.utils import get_local_ip, generate_host_key, format_connection_info
-from rag.rag_integration import integrate_rag_with_command_processor
+from rag.ai_integration import integrate_ai_with_command_processor, check_ollama_availability
 
 def start_db_exporter():
     """Starting the database to JSON exporter as a subprocess"""
@@ -127,44 +126,6 @@ def start_frontend_server(frontend_dir, port):
     
     return server_thread
 
-def check_ollama_availability(model_name):
-    """
-    Check if Ollama is installed, running, and has the required model.
-    """
-    import requests
-    
-    # first we want to check if Ollama is running by trying to connect to its API
-    try:
-        # Attempt to connect to Ollama API
-        response = requests.get(RAG_OLLAMA_URL, timeout=2)
-        if response.status_code != 200:
-            return False, f"Ollama is not responding correctly (Status code: {response.status_code})"
-    except requests.exceptions.ConnectionError:
-        return False, "Ollama is not running or not installed. Please install Ollama from https://ollama.com"
-    except requests.exceptions.Timeout:
-        return False, "Connection to Ollama timed out. Please check if Ollama is running properly."
-    except Exception as e:
-        return False, f"Error connecting to Ollama: {str(e)}"
-    
-    # next we check if the required model is available Cyboghost/dolphin-uncensored
-    try:
-        # to list available models
-        response = requests.get(f"{RAG_OLLAMA_URL}/api/tags", timeout=5)
-        if response.status_code != 200:
-            return False, f"Couldn't retrieve model list from Ollama (Status code: {response.status_code})"
-        
-        models = response.json().get('models', [])
-        model_names = [model.get('name') for model in models]
-        
-        # here we check if our model is in the list
-        if model_name not in model_names:
-            return False, f"The required model '{model_name}' is not installed. Please run 'ollama pull {model_name}'"
-            
-        return True, f"Ollama is running and the '{model_name}' model is available"
-    except Exception as e:
-        return False, f"Error checking for model availability: {str(e)}"
-
-
 def main():
     # register signal handlers
     signal.signal(signal.SIGINT, signal_handler)
@@ -188,24 +149,13 @@ def main():
     # initialize command processor
     command_processor = CommandProcessor(filesystem)
 
-    # initialize RAG integration if enabled
-    if RAG_ENABLED:
+    # initialize AI integration if enabled
+    if AI_ENABLED:
+        print(f"[*] Initializing AI capabilities in {AI_MODE} mode...")
         print("[*] Checking Ollama availability...")
-        ollama_available, message = check_ollama_availability(RAG_MODEL)
-        
-        if not ollama_available:
-            print(f"[!] RAG system will be disabled: {message}")
-            print("[*] Continuing without RAG capabilities")
-            # Continue with RAG disabled
-        else:
-            print(f"[*] {message}")
-            print("[*] Initializing LlamaIndex RAG system...")
-            try:
-                command_processor = integrate_rag_with_command_processor(command_processor)
-                print("[*] RAG system initialized")
-            except Exception as e:
-                print(f"[!] Failed to initialize RAG system: {e}")
-                print("[*] Continuing without RAG capabilities")
+        command_processor = integrate_ai_with_command_processor(command_processor)
+    else:
+        print("[*] AI capabilities disabled")
     
     # get local IP for connection info
     local_ip = get_local_ip()
