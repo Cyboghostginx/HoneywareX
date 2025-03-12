@@ -1,85 +1,401 @@
-ls -la
-cd ~
-pwd
-cat /etc/hostname
-echo "Hello World"
-mkdir test_dir
-touch new_file.txt
-whoami
+# System Information
 uname -a
-ps aux | head -5
-date
-history | tail -5
-hostname
+hostnamectl
+lsb_release -a
+cat /etc/os-release
+cat /proc/version
+cat /etc/issue
+uname -r
+uname -v
+uname -m
+uname -s
+uname -o
+cat /etc/*release
+cat /etc/lsb-release
+sysctl -a 2>/dev/null
+cat /proc/cmdline
+cat /proc/modules
+lsmod
+cat /proc/kallsyms
+dmesg -T | tail -20
+dmesg
+dmesg --human
+dmesg -f auth
+dmesg -f kern
+dmesg -l mail
+dmesg -l syslog
+dmesg -f user
+dmesg -l alert
+dmesg -l crit
+dmesg -l err
+dmesg -l info
+ls -la /boot/
+cat /proc/filesystems | grep -v nodev
+ls -lh /boot | grep vmlinuz
+head /boot/System.map-`uname -r`
+cat /etc/fstab
+findmnt
+df -hT
+mount | head -20
+
+# Hardware Information
+lscpu
+free -h
+vmstat -s
+cat /proc/cpuinfo
+cat /proc/meminfo
+lshw -short
+dmidecode -t system 2>/dev/null
+lspci
+lsusb
+lsblk
+fdisk -l 2>/dev/null
+ls /proc/bus
+ls /proc/bus/usb/devices 2>/dev/null
+ls /proc/bus/pci
+cat /proc/scsi/scsi 2>/dev/null
+cat /proc/partitions
+cat /proc/interrupts
+cat /proc/ioports
+grep -i "model name" /proc/cpuinfo
+cat /sys/devices/virtual/dmi/id/product_name 2>/dev/null
+cat /sys/devices/virtual/dmi/id/sys_vendor 2>/dev/null
+smartctl -a /dev/sda 2>/dev/null
+hdparm -i /dev/sda 2>/dev/null
+
+# User and Permission Information
+whoami
+id
 groups
-uptime
-file /bin/bash
-wc -l /etc/passwd
-head -3 /etc/passwd
-tail -3 /etc/passwd
-du -sh /home
-df -h
-stat /etc/passwd
-ip addr
-netstat -tulpn
-chmod 755 test_dir
-chown $(whoami) new_file.txt
-grep "root" /etc/passwd
-sort /etc/passwd | head -3
-uniq -c <<< $'apple\napple\nbanana'
+echo $USER
+echo $HOME
+echo $SHELL
+echo $PATH
+echo $0
+echo $1
+echo $2
+cat /etc/passwd
+getent passwd
+cat /etc/group
+w
 who
+last -n 10
+lastlog | grep -v "Never"
+lastb 2>/dev/null
+cat /etc/login.defs
+cat /etc/pam.d/common-auth 2>/dev/null
+cat /etc/pam.d/sshd 2>/dev/null
+cat /etc/sudoers 2>/dev/null
+cat /etc/sudoers.d/* 2>/dev/null
+sudo -l 2>/dev/null
+cat /etc/shells
+getcap -r /usr/bin/ 2>/dev/null
+find /usr/bin -perm -4000 2>/dev/null
+find /usr/bin -perm -2000 2>/dev/null
+find / -type f -perm -u=s 2>/dev/null
+find / -type f -perm -g=s 2>/dev/null
+stat /etc/passwd
+stat /etc/shadow 2>/dev/null
+
+# File System Information
+ls -la /
+ls -la /home/
+ls -la /var/
+ls -la /etc/
+ls -la /tmp/
+ls -la /dev/shm/
+ls -la /var/www/ 2>/dev/null
+ls -la /srv/ 2>/dev/null
+ls -la /opt/ 2>/dev/null
+ls -la /usr/local/
+ls -la /var/mail
+ls -la /var/spool/mail
+ls -al /var/tmp
+ls -al /etc/systemd/system/
+ls -al /lib/systemd/system/
+ls -la /root/ 2>/dev/null
+ls -la /etc/ssh/
+find /etc/ -type f -name "*.conf" | head -20
+find /var/log -type f -mtime -1 2>/dev/null | head -20
+locate passwd | head -10 2>/dev/null
+locate bash_history | head -10 2>/dev/null
+find /opt -name "*.txt" 2>/dev/null
+find /var/www -type f -name "*.php" 2>/dev/null
+find /etc -name "*.db" 2>/dev/null
+find /etc -name "*.sql" 2>/dev/null
+find / -name ".env" 2>/dev/null | head -5
+find / -name "*.bak" 2>/dev/null | head -5
+find / -name "*.old" 2>/dev/null | head -5
+find / -name "*.conf" 2>/dev/null | head -5
+find / -type f -executable 2>/dev/null | head -5
+find /etc -name "authorized_keys" 2>/dev/null
+
+# Network Information
+ip addr
+ifconfig 2>/dev/null
+ip route
+route 2>/dev/null
+netstat -rn 2>/dev/null
+netstat -tuln 2>/dev/null
+netstat -antupe 2>/dev/null
+netstat -anptu 2>/dev/null
+netstat -lntu 2>/dev/null
+ss -tuln
+ss -lntu
+ss -nptu
+lsof -i
+iptables -L -n 2>/dev/null
+iptables -L -v -n 2>/dev/null
+cat /etc/hosts
+cat /etc/resolv.conf
+cat /etc/networks 2>/dev/null
+cat /etc/protocols
+cat /etc/services | head -20
+cat /etc/hosts.allow 2>/dev/null
+cat /etc/hosts.deny 2>/dev/null
+cat /proc/net/tcp
+cat /proc/net/udp
+cat /proc/net/dev
+arp -a
+ip neigh
+cat /etc/network/interfaces 2>/dev/null
+cat /etc/sysconfig/network-scripts/ifcfg-* 2>/dev/null
+cat /etc/netplan/*.yaml 2>/dev/null
+hostname
+hostname -a
+hostname -d
+hostname -i
+hostname -I
+ip -s link
+
+# Process Information
+ps aux
+ps -ef
+ps axjf
+ps fax
+pstree -a 2>/dev/null
+top -b -n 1
+top -p 1,100,103 -b -n 1
+lsof -nP
+echo $$ $PPID
+pidof bash
+pidof python3
+ps aux | grep nginx
+ps aux | grep apache
+ps aux | grep postgres
+ps aux | grep mysql
+ps aux | grep ssh
+systemctl list-units --type=service --state=running
+systemctl list-unit-files | grep enabled
+systemd-cgtop -n 1 2>/dev/null
+systemctl status sshd
+journalctl -n 20 --no-pager
+journalctl -b --no-pager | head -20
+journalctl -k --no-pager | head -20
+journalctl -u sshd --no-pager | head -20
+lsof -p 1
+cat /proc/1/status
+cat /proc/1/limits
+cat /proc/1/environ 2>/dev/null
+cat /proc/self/environ
+cat /proc/self/maps
+cat /proc/self/status
+
+# Configuration and Service Information
+cat /etc/ssh/sshd_config
+cat /etc/ssh/ssh_config
+cat /etc/apache2/apache2.conf 2>/dev/null
+cat /etc/nginx/nginx.conf 2>/dev/null
+cat /etc/apache2/sites-enabled/* 2>/dev/null
+cat /etc/nginx/sites-enabled/* 2>/dev/null
+cat /etc/apache2/ports.conf 2>/dev/null
+cat /etc/mysql/my.cnf 2>/dev/null
+cat /etc/mysql/debian.cnf 2>/dev/null
+cat /etc/mysql/mariadb.cnf 2>/dev/null
+cat /etc/mysql/conf.d/mysql.cnf 2>/dev/null
+cat /etc/mysql/mysql.conf.d/mysql.cnf 2>/dev/null
+cat /etc/postgresql/*/main/postgresql.conf 2>/dev/null
+cat /etc/php/*/apache2/php.ini 2>/dev/null
+cat /etc/php/*/cli/php.ini 2>/dev/null
+cat /etc/php/*/fpm/php.ini 2>/dev/null
+cat /etc/crontab
+ls -la /etc/cron.d/
+ls -la /etc/cron.daily/
+ls -la /etc/cron.hourly/
+ls -la /etc/cron.monthly/
+ls -la /etc/cron.weekly/
+cat /etc/cron.d/* 2>/dev/null
+cat /etc/cron.daily/* 2>/dev/null
+cat /var/spool/cron/* 2>/dev/null
+cat /var/spool/cron/crontabs/* 2>/dev/null
+crontab -l 2>/dev/null
+crontab -l -u root 2>/dev/null
+systemctl list-unit-files
+systemctl list-timers
+systemctl list-dependencies
+cat /etc/profile
+cat /etc/bashrc 2>/dev/null
+cat /etc/bash.bashrc 2>/dev/null
+cat /etc/profile.d/bash_completion.sh 2>/dev/null
+cat /etc/environment
+cat /etc/security/limits.conf
+cat /etc/sysctl.conf
+cat /etc/motd
+cat /etc/issue
+cat /etc/update-motd.d/* 2>/dev/null
+cat /etc/nsswitch.conf
+cat /etc/ldap/ldap.conf 2>/dev/null
+cat /etc/exports 2>/dev/null
+cat /etc/inetd.conf 2>/dev/null
+cat /etc/pam.d/passwd 2>/dev/null
+cat /etc/apparmor.d/usr.bin.sh 2>/dev/null
+ls -la /etc/apparmor.d/ 2>/dev/null
+
+# Log Information
+cat /var/log/syslog 2>/dev/null | tail -20
+cat /var/log/messages 2>/dev/null | tail -20
+cat /var/log/auth.log 2>/dev/null | tail -20
+cat /var/log/secure 2>/dev/null | tail -20
+cat /var/log/kern.log 2>/dev/null | tail -20
+cat /var/log/dmesg 2>/dev/null | tail -20
+cat /var/log/apache2/access.log 2>/dev/null | tail -10
+cat /var/log/apache2/error.log 2>/dev/null | tail -10
+cat /var/log/nginx/access.log 2>/dev/null | tail -10
+cat /var/log/nginx/error.log 2>/dev/null | tail -10
+cat /var/log/mysql/error.log 2>/dev/null | tail -10
+cat /var/log/postgresql/postgresql-*-main.log 2>/dev/null | tail -10
+cat /var/log/mail.log 2>/dev/null | tail -10
+cat /var/log/fail2ban.log 2>/dev/null | tail -10
+cat /var/log/cron 2>/dev/null | tail -10
+cat /var/log/audit/audit.log 2>/dev/null | tail -10
+
+# Package and Software Information
+dpkg -l 2>/dev/null | head -20
+rpm -qa 2>/dev/null | head -20
+apt list --installed 2>/dev/null | head -20
+apt list --upgradable 2>/dev/null
+apt list --upgradable | grep polkit 2>/dev/null
+yum list installed 2>/dev/null | head -20
+pip list 2>/dev/null
+pip3 list 2>/dev/null
+gem list 2>/dev/null
+npm list -g --depth=0 2>/dev/null
+composer show 2>/dev/null
+bash --version
+python --version
+python3 --version
+php --version 2>/dev/null
+perl --version 2>/dev/null
+ruby --version 2>/dev/null
+java -version 2>/dev/null
+gcc --version 2>/dev/null
+go version 2>/dev/null
+node --version 2>/dev/null
+mysql --version 2>/dev/null
+psql --version 2>/dev/null
+apache2 -v 2>/dev/null
+nginx -v 2>/dev/null
+openssl version
+
+# Security Information
+cat /etc/apparmor.d/README 2>/dev/null
+sestatus 2>/dev/null
+getenforce 2>/dev/null
+aa-status 2>/dev/null
+ufw status 2>/dev/null
+cat /etc/selinux/config 2>/dev/null
+ls -la /etc/ssl/certs/
+ls -la /etc/ssl/private/ 2>/dev/null
+openssl x509 -text -noout -in /etc/ssl/certs/ssl-cert-snakeoil.pem 2>/dev/null | head -15
+cat /etc/shadow 2>/dev/null | head -5
+sudo -V 2>/dev/null
+checksec --kernel 2>/dev/null
+checksec --kernel bzImage 2>/dev/null
+
+# Container and Virtualization
+docker info 2>/dev/null
+docker ps 2>/dev/null
+docker images 2>/dev/null
+cat /etc/docker/daemon.json 2>/dev/null
+ls -la /var/lib/docker 2>/dev/null
+kubectl get nodes 2>/dev/null
+kubectl get pods --all-namespaces 2>/dev/null
+kubectl config view 2>/dev/null
+systemd-detect-virt 2>/dev/null
+virt-what 2>/dev/null
+lscpu | grep -i "hypervisor\|virtual"
+dmidecode | grep -i "manufacturer\|product" 2>/dev/null
+dmesg | grep -i "virtual\|vmware\|xen\|kvm"
+cat /proc/cpuinfo | grep -i "hypervisor\|virtual"
+grep -i "vmware\|virtualbox\|kvm\|xen" /var/log/dmesg 2>/dev/null
+cat /proc/1/cgroup 2>/dev/null
+ls -la /.dockerenv 2>/dev/null
+
+# Environment Variables and Shell Information
+env
+printenv
+set
+echo $PATH
+echo $SHELL
+echo $TERM
+echo $LANG
+echo $PWD
+echo $LOGNAME
+echo $HOSTNAME
+echo $TZ
+history | tail -20
+cat ~/.bash_history 2>/dev/null | tail -20
+
+# Web Servers and Applications
+curl -s http://localhost 2>/dev/null | head -20
+wget -qO- http://localhost 2>/dev/null | head -20
+find /var/www -type f -name "config*" 2>/dev/null
+find /var/www -type f -name "wp-config.php" 2>/dev/null
+find /var/www -type f -name ".htaccess" 2>/dev/null
+find /var/www -type f -name ".env" 2>/dev/null
+find /etc/apache2 -type f -name "*.conf" 2>/dev/null
+find /etc/nginx -type f -name "*.conf" 2>/dev/null
+
+# Disk and Storage
+df -h
+du -sh /* 2>/dev/null
+mount
+cat /etc/fstab
+findmnt
+lsblk
+fdisk -l 2>/dev/null
+pvs 2>/dev/null
+vgs 2>/dev/null
+lvs 2>/dev/null
+cat /proc/mounts
+
+# Network Tools Output
 ping -c 2 8.8.8.8
-ifconfig
-wget --version
-curl --version
-nc -h
-ssh -V
-scp -V
-sftp -V
-nmap --version
+ping -c 2 google.com
+traceroute -m 5 google.com 2>/dev/null
 dig google.com
 nslookup google.com
 host google.com
-traceroute -m 5 google.com
-ip route
-lsof -i
-lsmod | head -5
-dmesg | tail -5
-systemctl status ssh
-systemctl list-units --type=service --state=running | head -5
-journalctl --no-pager -n 5
-top -n 1 -b | head -10
-free -h
-lscpu | head -5
-lspci | head -2
-lsusb | head -2
-lsblk
-fdisk -l | head -5
-mount | head -5
-apt list --installed | head -5
-find /etc -name "*.conf" -type f | head -5
-locate passwd | head -3
-tar --version
-gzip --version
-rsync --version
-awk --version
-sed --version
-cut --version
-tr --help | head -5
-diff --version
-vi --version | head -3
-nano --version
-less --version
-strings /bin/ls | head -5
-sudo -V
-bash --version
-env | head -5
-printenv | head -5
-docker --version
-python3 --version
-gcc --version
-logger "Test message" && grep "Test message" /var/log/syslog | tail -1
-last | head -5
-lastlog | head -5
-watch --version
-ldd /bin/ls | head -5
+nc -zv localhost 22 2>/dev/null
+ssh -V
+scp -V
+sftp -V
+curl -V
+wget -V
+
+# System Performance
+uptime
+vmstat 1 3
+free -m
+iostat 2>/dev/null
+sar -u 2>/dev/null
+mpstat 2>/dev/null
+cat /proc/loadavg
+
+# Database Information
+mysql -V 2>/dev/null
+psql -V 2>/dev/null
+cat ~/.my.cnf 2>/dev/null
+cat ~/.pgpass 2>/dev/null
+find / -name "*.db" 2>/dev/null | head -10
+find / -name "*.sql" 2>/dev/null | head -10
