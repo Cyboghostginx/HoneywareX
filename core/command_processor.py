@@ -13,12 +13,12 @@ from config import HOSTNAME, BASE_DIR
 class CommandProcessor:
     def __init__(self, filesystem):
         self.filesystem = filesystem
-        self.command_history = {}  # Store command history per session
+        self.command_history = {}  # store command history per session
         self.hostname = HOSTNAME
-        self.current_dirs = {}  # Track current directory per session
-        self.last_exit_code = {}  # Track last exit code per session
-        self.known_commands = set()  # Set of commands known to exist
-        self.ping_active = {}  # Track active ping sessions
+        self.current_dirs = {}  # track current directory per session
+        self.last_exit_code = {}  # track last exit code per session
+        self.known_commands = set()  # set of commands known to exist
+        self.ping_active = {}  # track active ping sessions
         self.load_known_commands()
         
     def load_known_commands(self):
@@ -84,7 +84,7 @@ class CommandProcessor:
         prompt_dir = current_dir
         if current_dir.startswith("/home/honeypot"):
             prompt_dir = current_dir.replace("/home/honeypot", "~")
-        return f"honeypot@{self.hostname}:{prompt_dir}$ "
+        return f"haskoli@{self.hostname}:{prompt_dir}$ "
     
     def process_command(self, session_id, command):
         """Process a user command and generate a realistic response"""
@@ -879,16 +879,19 @@ class CommandProcessor:
     
     def cmd_uname(self, session_id, args):
         """Handle uname command"""
+        # get current time for system information
+        current_time = datetime.datetime.now()
+        current_time_str = current_time.strftime("%a %b %d %I:%M:%S %p %Z %Y")
         # check for any of the flags below
         if "-a" in args:
             self.last_exit_code[session_id] = 0
-            return "Linux server01 5.4.0-107-generic #121-Ubuntu SMP Thu Mar 24 16:04:27 UTC 2022 x86_64 x86_64 x86_64 GNU/Linux"
+            return f"Linux server01 5.4.0-107-generic #121-Ubuntu SMP {current_time_str} x86_64 x86_64 x86_64 GNU/Linux"
         if "-r" in args:
             self.last_exit_code[session_id] = 0
             return "5.4.0-107-generic"
         if "-n" in args:
             self.last_exit_code[session_id] = 0
-            return "server01"
+            return "ubuntu01"
         
         # default behavior
         self.last_exit_code[session_id] = 0
