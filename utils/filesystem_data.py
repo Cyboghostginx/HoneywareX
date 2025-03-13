@@ -4,7 +4,7 @@ Filesystem structure definition for the SSH honeypot
 import os
 import json
 from utils.log_setup import logger
-from config import BASE_DIR
+from config import BASE_DIR, USERNAME
 
 # path to the filesystem JSON data
 JSON_FILE = os.path.join(BASE_DIR, 'files.json')
@@ -23,7 +23,7 @@ except FileNotFoundError:
         "dev": {},
         "etc": {},
         "home": {
-            "honeypot": {
+            USERNAME: {
                 ".bashrc": "# ~/.bashrc: executed by bash for non-login shells",
                 "readme.txt": "Welcome to the server!"
             }
@@ -49,7 +49,7 @@ except json.JSONDecodeError as e:
     # fallback to a minimal filesystem if JSON is invalid
     file_system = {
         "home": {
-            "honeypot": {
+            USERNAME: {
                 ".bashrc": "# ~/.bashrc: executed by bash for non-login shells",
                 "readme.txt": "Welcome to the server!"
             }
@@ -59,8 +59,8 @@ except json.JSONDecodeError as e:
 
 # sample files to create
 sample_files = {
-    "/home/honeypot/notes.txt": "These are my personal notes.",
-    "/var/log/honeypot.log": "Feb 28 10:23:45 Honeypot service started"
+    f"/home/{USERNAME}/notes.txt": "These are my personal notes.",
+    f"/var/log/{USERNAME}.log": f"Feb 28 10:23:45 {USERNAME} service started"
 }
 
 # verify that the filesystem structure has all root directories
