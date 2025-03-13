@@ -2,14 +2,8 @@
 
 # Models tested in this project (Open-Source)
 # -
-# Llama 3.2 - 3B (ollama pull 3.2:3b) - 
-# Qwen 2.5 - 3B (ollama pull qwen2.5:3b) - 
-# -
-# Dolphin3 - 8B (ollama pull dolphin3) - 
-# Llama-linux - 8B (ollama pull Cyboghost/llama-linux:latest) - Tuned by me specifically for this project
-# Llama3.1 - 8B (ollama run llama3.1) - 
-# Gemma - 9B (ollama pull gemma2:latest) - 
-
+# Cyboghost/llama-linux:latest
+# Cyboghost/gemma3-linux:latest
 
 # this script can be used to setup our AI server equiped with the baseline models needed, and also with an NGROK tunneling that allows us to use this model on any other project.
 
@@ -21,11 +15,12 @@ echo -e "\n"
 
 # Pull Ollama's models needed from repository
 ollama pull Cyboghost/llama-linux:latest # any Model to be used can be changed here
+ollama pull Cyboghost/gemma3-linux:latest # any Model to be used can be changed here
 sleep 3
 # We can start with these 2 model for testing and add on later.
 
 # cron job for ollama run llama3.2 ""
-(crontab -l 2>/dev/null; echo '*/5 * * * * ollama run Cyboghost/llama-linux:latest""') | crontab -
+(crontab -l 2>/dev/null; echo '*/5 * * * * ollama run Cyboghost/gemma3-linux:latest""') | crontab -
 
 # install NGROK
 curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
