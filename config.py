@@ -31,7 +31,6 @@ AI_MODE = "direct"  # Options: "rag" or "direct"
 
 # Ollama model configuration
 RAG_MODEL = "Cyboghost/gemma3-linux:latest" #Cyboghost/llama-linux:latest #Cyboghost/gemma3-linux:latest
-#RAG_OLLAMA_URL = "https://xenai.cloud"
 RAG_OLLAMA_URL = "http://localhost:11434"
 RAG_STREAM_OUTPUT = True   # Controls streaming for both RAG and direct inference
 RAG_TOKEN_DELAY = 0.0      # Delay between tokens for streamed output (seconds)
