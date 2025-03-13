@@ -7,7 +7,7 @@ import shutil
 import copy
 from utils.log_setup import logger
 from utils.filesystem_data import file_system, sample_files
-from config import FILESYSTEM_DIR
+from config import FILESYSTEM_DIR, USERNAME
 
 class VirtualFilesystem:
     def __init__(self, base_dir):
