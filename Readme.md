@@ -12,6 +12,12 @@ To improve speed and accuracy, the commands are classified into 3 parts namely:
 - Native Commands: These commands can work without RAG intervention, mostly file management.
 - Non-Native Commands: These commands need RAG intervention.
 - Invalid Commands: Any command that can't be found in a commands.txt file will be rendered invalid and would return the command not found error instead of processing an invalid command which would introduce hallucination in RAG or induce more resource usage in our honeypot.
+---
+
+## Updates
+- Added direct AI inferencing without AI
+- Added Cyboghost/Gemma3-linux model
+- More coming soon...
 
 ---
 
