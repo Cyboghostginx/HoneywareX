@@ -9,6 +9,12 @@ from config import USERNAME, PASSWORD, RAG_STREAM_OUTPUT, RAG_TOKEN_DELAY
 # stop event for graceful shutdown
 stop_event = threading.Event()
 
+active_command = {
+    "thread": None,
+    "interrupted": False,
+    "session_id": None
+}
+
 class HoneypotServer(paramiko.ServerInterface):
     def __init__(self, client_ip):
         self.client_ip = client_ip
@@ -157,6 +163,11 @@ def handle_connection(client, addr, command_processor, host_key):
         # define token callback function for streaming RAG output with real-time cleanup
         def token_callback(token):
             nonlocal channel, in_streaming_rag, streaming_start_time, streaming_last_output
+            
+            # add this check at the beginning
+            if active_command["interrupted"] and active_command["session_id"] == server.session_id:
+                logger.info(f"Skipping token due to interrupt for session {server.session_id}")
+                return
             if channel and not channel.closed:
                 # clean markdown from the token in real-time
                 token = clean_token(token)
@@ -452,8 +463,11 @@ def handle_connection(client, addr, command_processor, host_key):
                     elif char == "\x03":
                         # cancel streaming RAG if active
                         if in_streaming_rag:
+                            # set the global interrupted flag
+                            active_command["interrupted"] = True
+                            active_command["session_id"] = server.session_id
                             in_streaming_rag = False
-                            channel.send("^C\r\n")
+
                             # reset buffer and show new prompt
                             buffer = ""
                             cursor_pos = 0
@@ -552,6 +566,9 @@ def handle_connection(client, addr, command_processor, host_key):
                                     in_streaming_rag = True
                                     streaming_start_time = time.time()
                                     streaming_last_output = time.time()
+
+                                    active_command["interrupted"] = False
+                                    active_command["session_id"] = server.session_id
                                     
                                     # define a function to handle the RAG processing in a separate thread
                                     def process_rag_command():
@@ -673,6 +690,11 @@ def handle_connection(client, addr, command_processor, host_key):
     except Exception as e:
         logger.error(f"Error handling connection from {addr[0]}: {str(e)}")
     finally:
+        # reset any active commands associated with this session
+        if active_command["session_id"] == server.session_id:
+            active_command["interrupted"] = True
+            active_command["session_id"] = None
+
         # only log session end if not already closed
         if not session_closed and hasattr(server, 'session_id') and server.session_id is not None:
             log_session_end(server.session_id)
