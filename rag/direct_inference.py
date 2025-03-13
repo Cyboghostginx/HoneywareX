@@ -6,6 +6,7 @@ import json
 import time
 from utils.log_setup import logger
 from config import RAG_OLLAMA_URL, RAG_MODEL, RAG_TOKEN_DELAY, RAG_STREAM_OUTPUT
+from core.server import active_command
 
 class DirectOllamaInference:
     
@@ -77,6 +78,12 @@ class DirectOllamaInference:
                 # process the streaming response
                 full_response = ""
                 for line in response.iter_lines():
+                    # Add interruption check here
+                    if active_command.get("interrupted", False):
+                        logger.info(f"Direct inference streaming interrupted by user")
+                        response.close()  # Important: Close the HTTP connection
+                        break
+                        
                     if line:
                         # decode and parse the JSON line
                         line_data = json.loads(line.decode('utf-8'))
