@@ -372,18 +372,25 @@ class CommandProcessor:
         return stats
     
     def cmd_ls(self, session_id, args):
-        """Handle ls command"""
-        # basic ls implementation
+        """Handle ls command with improved support for -la flags"""
+        # Parse flags and targets
         flags = [arg for arg in args if arg.startswith("-")]
         targets = [arg for arg in args if not arg.startswith("-")]
         
-        current_dir = self.current_dirs.get(session_id, "/home/honeypot")
+        current_dir = self.current_dirs.get(session_id, "/home/haskoli")
         
-        # handle flags (simplified)
-        show_hidden = "-a" in flags or "-la" in flags or "-al" in flags
-        long_format = "-l" in flags or "-la" in flags or "-al" in flags
+        # Process flags
+        show_hidden = False
+        long_format = False
         
-        # if no specification in our cd command, use current directory
+        # Check for combined flags like -la or -al
+        for flag in flags:
+            if 'a' in flag:
+                show_hidden = True
+            if 'l' in flag:
+                long_format = True
+        
+        # If no targets, use current directory
         if not targets:
             targets = [current_dir]
         
@@ -395,24 +402,60 @@ class CommandProcessor:
             else:
                 target_path = target
             
-            # special handling for root directory
-            if target_path == "/":
-                # list the root directories directly from filesystem_data
-                if hasattr(self.filesystem, 'session_filesystems') and session_id in self.filesystem.session_filesystems:
-                    root_contents = list(self.filesystem.session_filesystems[session_id].keys())
-                    results.append("  ".join(sorted(root_contents)))
-                    self.last_exit_code[session_id] = 0
-                    continue
-            
-            # regular directory listing
+            # Get directory contents
             dir_listing = self.filesystem.list_directory(target_path, session_id)
             
-            # if multiple targets, show directory names
+            # If multiple targets, show directory names
             if len(targets) > 1:
                 results.append(f"{target_path}:")
             
-            results.append(dir_listing)
-
+            # Process directory listing
+            if isinstance(dir_listing, str) and "cannot access" not in dir_listing:
+                if long_format:
+                    # Simulate long format (-l)
+                    # First get the raw file list
+                    files = dir_listing.replace("\033[1;34m", "").replace("\033[1;32m", "").replace("\033[0m", "")
+                    file_list = [f.rstrip('*/') for f in files.split("  ") if f]
+                    
+                    # Filter hidden files if not showing hidden
+                    if not show_hidden:
+                        file_list = [f for f in file_list if not f.startswith('.')]
+                    
+                    # Format in long format
+                    long_results = []
+                    for filename in sorted(file_list):
+                        # Check if it's a directory
+                        file_path = os.path.join(target_path, filename)
+                        is_dir = self.filesystem.is_directory(file_path, session_id)
+                        
+                        # Simulate permissions, size, date
+                        perm = "drwxr-xr-x" if is_dir else "-rw-r--r--"
+                        size = "4096" if is_dir else str(random.randint(100, 10000))
+                        date = datetime.datetime.now().strftime("%b %d %H:%M")
+                        owner = "haskoli"
+                        group = "haskoli"
+                        
+                        # Add color for directories
+                        display_name = f"\033[1;34m{filename}\033[0m" if is_dir else filename
+                        
+                        # Form the long listing line
+                        line = f"{perm} 1 {owner} {group} {size.rjust(8)} {date} {display_name}"
+                        long_results.append(line)
+                    
+                    results.append("\n".join(long_results))
+                else:
+                    # Regular format, just filter hidden files if needed
+                    if not show_hidden:
+                        # Split by double spaces, filter hidden files, rejoin
+                        files = dir_listing.split("  ")
+                        filtered_files = [f for f in files if not f.strip().startswith('.')]
+                        dir_listing = "  ".join(filtered_files)
+                    
+                    results.append(dir_listing)
+            else:
+                # Error message or empty directory
+                results.append(dir_listing)
+                
             if len(targets) > 1 and target != targets[-1]:
                 results.append("")
         
