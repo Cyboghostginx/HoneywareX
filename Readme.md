@@ -15,7 +15,7 @@ To improve speed and accuracy, the commands are classified into 3 parts namely:
 ---
 
 ## Updates
-- Added direct AI inferencing without AI
+- Added direct AI inferencing without RAG.
 - Added Cyboghost/Gemma3-linux model
 - More coming soon...
 
