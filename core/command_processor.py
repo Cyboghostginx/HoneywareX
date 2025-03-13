@@ -1,5 +1,5 @@
 """
-Where all our commands are processed
+where all commands are processed
 """
 import os
 import datetime
@@ -8,7 +8,7 @@ import random
 import time
 import ipaddress
 from utils.log_setup import logger
-from config import HOSTNAME, BASE_DIR
+from config import HOSTNAME, BASE_DIR, USERNAME, HOME_DIRECTORY
 
 class CommandProcessor:
     def __init__(self, filesystem):
@@ -58,7 +58,7 @@ class CommandProcessor:
     def initialize_session(self, session_id):
         """Initialize a new session state"""
         self.command_history[session_id] = []
-        self.current_dirs[session_id] = "/home/honeypot"
+        self.current_dirs[session_id] = f"/home/{USERNAME}"
         self.last_exit_code[session_id] = 0
         
         # initialize a separate filesystem for this session
@@ -80,11 +80,11 @@ class CommandProcessor:
     
     def get_prompt(self, session_id):
         """Get command prompt based on current directory"""
-        current_dir = self.current_dirs.get(session_id, "/home/honeypot")
+        current_dir = self.current_dirs.get(session_id, f"/home/{USERNAME}")
         prompt_dir = current_dir
-        if current_dir.startswith("/home/honeypot"):
-            prompt_dir = current_dir.replace("/home/honeypot", "~")
-        return f"haskoli@{self.hostname}:{prompt_dir}$ "
+        if current_dir.startswith(f"/home/{USERNAME}"):
+            prompt_dir = current_dir.replace(f"/home/{USERNAME}", "~")
+        return f"{USERNAME}@{self.hostname}:{prompt_dir}$ "
     
     def process_command(self, session_id, command):
         """Process a user command and generate a realistic response"""
@@ -110,7 +110,7 @@ class CommandProcessor:
             response = self.execute_command(session_id, cmd)
 
             # resolve path to handle relative paths correctly
-            current_dir = self.current_dirs.get(session_id, "/home/honeypot")
+            current_dir = self.current_dirs.get(session_id, f"/home/{USERNAME}")
             if not output_file.startswith('/'):
                 output_path = os.path.normpath(os.path.join(current_dir, output_file))
             else:
@@ -520,10 +520,10 @@ class CommandProcessor:
     
     def cmd_cd(self, session_id, args):
         """Handle cd command"""
-        current_dir = self.current_dirs.get(session_id, "/home/honeypot")
+        current_dir = self.current_dirs.get(session_id, f"/home/{USERNAME}")
         
         if not args:  # cd with no args
-            self.current_dirs[session_id] = "/home/honeypot"
+            self.current_dirs[session_id] = f"/home/{USERNAME}"
             self.last_exit_code[session_id] = 0
             return ""
         
@@ -531,7 +531,7 @@ class CommandProcessor:
         
         # handle special cases
         if target == "~" or target == "$HOME":
-            self.current_dirs[session_id] = "/home/honeypot"
+            self.current_dirs[session_id] = f"/home/{USERNAME}"
             self.last_exit_code[session_id] = 0
             return ""
         elif target == "..":
@@ -581,7 +581,7 @@ class CommandProcessor:
             self.last_exit_code[session_id] = 1
             return "cp: missing file operand"
         
-        current_dir = self.current_dirs.get(session_id, "/home/honeypot")
+        current_dir = self.current_dirs.get(session_id, f"/home/{USERNAME}")
         
         # last argument is the destination
         destination = args[-1]
@@ -648,7 +648,7 @@ class CommandProcessor:
             self.last_exit_code[session_id] = 1
             return "mv: missing file operand"
         
-        current_dir = self.current_dirs.get(session_id, "/home/honeypot")
+        current_dir = self.current_dirs.get(session_id, f"/home/{USERNAME}")
         
         # last argument is the destination
         destination = args[-1]
@@ -741,7 +741,7 @@ class CommandProcessor:
     def cmd_pwd(self, session_id):
         """Handle pwd command"""
         self.last_exit_code[session_id] = 0
-        return self.current_dirs.get(session_id, "/home/honeypot")
+        return self.current_dirs.get(session_id, f"/home/{USERNAME}")
     
     def cmd_cat(self, session_id, args):
         """Handle cat command"""
@@ -749,7 +749,7 @@ class CommandProcessor:
             self.last_exit_code[session_id] = 1
             return "cat: missing operand"
         
-        current_dir = self.current_dirs.get(session_id, "/home/honeypot")
+        current_dir = self.current_dirs.get(session_id, f"/home/{USERNAME}")
         
         results = []
         for filename in args:
@@ -781,7 +781,7 @@ class CommandProcessor:
             self.last_exit_code[session_id] = 1
             return "mkdir: missing operand"
         
-        current_dir = self.current_dirs.get(session_id, "/home/honeypot")
+        current_dir = self.current_dirs.get(session_id, f"/home/{USERNAME}")
         
         results = []
         for dirname in args:
@@ -846,7 +846,7 @@ class CommandProcessor:
             self.last_exit_code[session_id] = 1
             return "rm: missing operand"
         
-        current_dir = self.current_dirs.get(session_id, "/home/honeypot")
+        current_dir = self.current_dirs.get(session_id, f"/home/{USERNAME}")
         
         results = []
         for target in targets:
@@ -899,7 +899,7 @@ class CommandProcessor:
             self.last_exit_code[session_id] = 1
             return "touch: missing file operand"
         
-        current_dir = self.current_dirs.get(session_id, "/home/honeypot")
+        current_dir = self.current_dirs.get(session_id, f"/home/{USERNAME}")
         
         for filename in args:
             # resolve the path
@@ -918,7 +918,7 @@ class CommandProcessor:
     def cmd_whoami(self, session_id):
         """Handle whoami command"""
         self.last_exit_code[session_id] = 0
-        return "honeypot"
+        return f"{USERNAME}"
     
     def cmd_uname(self, session_id, args):
         """Handle uname command"""
