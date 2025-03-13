@@ -34,9 +34,14 @@ To improve speed and accuracy, the commands are classified into 3 parts namely:
 - At least 16gb ram system (the higher the faster)
 - that's all...(:
 
-You can also just test out my tuned independent model from llama3.1 8B parameter version on Ollama. Make sure Ollama is installed, and then you can use the command below to inference the model right from the terminal.
+Models Tuned already
+
+[Cyboghost/gemma3-linux:latest](https://ollama.com/Cyboghost/gemma3-linux)
+[Cyboghost/llama-linux:latest](https://ollama.com/Cyboghost/llama-linux)
+
+You can also just test out my tuned independent models version on Ollama. Make sure Ollama is installed, and then you can use the command below to inference the model right from the terminal.
 ```bash
-   ollama run Cyboghost/llama-linux:latest
+   ollama run <model_you_chose_to_test>
 ```
 You can check out all my tuned models on [here](https://ollama.com/Cyboghost)
 
