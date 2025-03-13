@@ -6,6 +6,7 @@ import sys
 import types
 from utils.log_setup import logger
 from config import RAG_OLLAMA_URL, RAG_MODEL, RAG_COMMANDS_FILE, RAG_STREAM_OUTPUT
+from core.server import active_command
 
 # list of commands natively handled by the honeypot, this should be kept in sync with the actual implemented commands in command_processor.py
 NATIVE_COMMANDS = [
@@ -108,6 +109,7 @@ class SmartRAGIntegration:
             return None
                 
         # for non-native commands, use RAG with optional streaming
+        # generate response with optional streaming
         try:
             logger.info(f"Generating RAG response for: {command_input}")
             
@@ -116,9 +118,13 @@ class SmartRAGIntegration:
                 self.streaming_sessions[session_id] = token_callback
                 logger.info(f"Enabled streaming for session {session_id}")
             
-            # generate response with optional streaming
+            # Check for interruption before making the RAG request
             return self.rag.generate_response(session_id, command_input, token_callback)
         except Exception as e:
+            # Check if the exception was caused by an interruption
+            if active_command.get("interrupted", False) and active_command.get("session_id") == session_id:
+                logger.info(f"RAG request interrupted by user for session {session_id}")
+                return "^C"
             logger.error(f"Error generating RAG response: {e}")
             return f"Error executing command: {str(e)}"
     
