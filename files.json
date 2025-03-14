@@ -121,106 +121,155 @@
   },
   "home": {
     "haskoli": {
-      ".bashrc": "# ~/.bashrc: executed by bash for non-login shells\n# see /usr/share/doc/bash/examples/startup-files for examples\n\nalias ls='ls --color=auto'\nalias ll='ls -la'\nalias grep='grep --color=auto'\n\n# If not running interactively, don't do anything\ncase $- in\n    *i*) ;;\n      *) return;;\nesac\n\n# don't put duplicate lines or lines starting with space in the history\nHISTCONTROL=ignoreboth\n\n# append to the history file, don't overwrite it\nshopt -s histappend\n\n# for setting history length\nHISTSIZE=1000\nHISTFILESIZE=2000",
-      ".bash_history": "ls -la\ncd /var/www/html\ncat /etc/passwd\nsudo systemctl restart apache2\ntail -f /var/log/apache2/access.log\ngrep -r \"password\" /var/www\nnetstat -tuln\nps aux | grep apache\nwhoami\nsudo apt update\nsudo apt install vim\nscp backup.tar.gz user@192.168.1.10:/tmp/\ncurl -s https://example.com/api/check -H \"X-Api-Key: s3cr3t_k3y_h3r3\"",
-      ".bash_logout": "# ~/.bash_logout: executed by bash(1) when login shell exits.\n\n# when leaving the console clear the screen to increase privacy\nif [ \"$SHLVL\" = 1 ]; then\n    [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q\nfi",
-      ".bash_profile": "# ~/.bash_profile: executed by the command interpreter for login shells.\n# This file is not read by bash(1), if ~/.bash_login or ~/.profile exists.\n\n# include .bashrc if it exists\nif [ -f \"$HOME/.bashrc\" ]; then\n    . \"$HOME/.bashrc\"\nfi",
-      ".profile": "# ~/.profile: executed by the command interpreter for login shells.\n# This file is not read by bash(1), if ~/.bash_login or ~/.profile exists.\n\n# if running bash\nif [ -n \"$BASH_VERSION\" ]; then\n    # include .bashrc if it exists\n    if [ -f \"$HOME/.bashrc\" ]; then\n\t. \"$HOME/.bashrc\"\n    fi\nfi\n\n# set PATH so it includes user's private bin if it exists\nif [ -d \"$HOME/bin\" ] ; then\n    PATH=\"$HOME/bin:$PATH\"\nfi\n\n# set PATH so it includes user's private bin if it exists\nif [ -d \"$HOME/.local/bin\" ] ; then\n    PATH=\"$HOME/.local/bin:$PATH\"\nfi",
+      ".bashrc": "# ~/.bashrc: executed by bash for non-login shells\n# see /usr/share/doc/bash/examples/startup-files for examples\n\nalias ls='ls --color=auto'\nalias ll='ls -la'\nalias grep='grep --color=auto'\nalias rm='rm -i'\nalias cp='cp -i'\nalias mv='mv -i'\nalias h='history'\nalias j='jobs -l'\nalias p='ps -f'\nalias df='df -h'\nalias du='du -h'\n\n# If not running interactively, don't do anything\ncase \\$- in\n    *i*) ;;\n      *) return;;\nesac\n\n# don't put duplicate lines or lines starting with space in the history\nHISTCONTROL=ignoreboth\n\n# append to the history file, don't overwrite it\nshopt -s histappend\n\n# for setting history length\nHISTSIZE=1000\nHISTFILESIZE=2000",
+      ".bash_history": "ls -la\ncd /var/www/html\ncat /etc/passwd\nsudo systemctl restart apache2\ntail -f /var/log/apache2/access.log\ngrep -r \"password\" /var/www\nnetstat -tuln\nps aux | grep apache\nwhoami\nsudo apt update\nsudo apt install vim\nscp backup.tar.gz user@192.168.1.10:/tmp/\ncurl -s https://example.com/api/check -H \"X-Api-Key: s3cr3t_k3y_h3r3\"\nsudo mysql -u root -p\ncat /var/log/auth.log\nmkdir projects\ncd projects\ngit clone https://github.com/company/internal-app.git\ncd internal-app\nnpm install\nnpm run build\nssh admin@192.168.1.50\ncat .env\nphp artisan migrate\nphp artisan key:generate",
+      ".bash_logout": "# ~/.bash_logout: executed by bash(1) when login shell exits.\n\n# when leaving the console clear the screen to increase privacy\nif [ \"\\$SHLVL\" = 1 ]; then\n    [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q\nfi",
+      ".bash_profile": "# ~/.bash_profile: executed by the command interpreter for login shells.\n# This file is not read by bash(1), if ~/.bash_login or ~/.profile exists.\n\n# include .bashrc if it exists\nif [ -f \"\\$HOME/.bashrc\" ]; then\n    . \"\\$HOME/.bashrc\"\nfi",
+      ".profile": "# ~/.profile: executed by the command interpreter for login shells.\n# This file is not read by bash(1), if ~/.bash_login or ~/.profile exists.\n\n# if running bash\nif [ -n \"\\$BASH_VERSION\" ]; then\n    # include .bashrc if it exists\n    if [ -f \"\\$HOME/.bashrc\" ]; then\n\t. \"\\$HOME/.bashrc\"\n    fi\nfi\n\n# set PATH so it includes user's private bin if it exists\nif [ -d \"\\$HOME/bin\" ] ; then\n    PATH=\"\\$HOME/bin:\\$PATH\"\nfi\n\n# set PATH so it includes user's private bin if it exists\nif [ -d \"\\$HOME/.local/bin\" ] ; then\n    PATH=\"\\$HOME/.local/bin:\\$PATH\"\nfi",
+      ".ssh": {
+        "authorized_keys": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDKXLU8JVXcZsYaRKdYRoMcZvGa7ELhvUnfQUjqQn4BkVJiDGCKXJQnpLWGtnlKqpXhn9o9OHRqLeF9p4FXTs2nfMsGPcwLFSFBTwk2yYFMqiHXQ9hJRgH/Xj3StgMeUG7DgJnFZTed9o44w1vmNThUVt4W6IPc2qBUCt497vZQ9UZYbnI2f9HqZuxrYZtVz5tLGEQyVTZTtRFdQM7I54LjkKEH6FGsXMVsJG3Gd0rN8OzTKdXB6xopz3jD8GGbUeDqBKA89zOpxGvEDB/rBbXdPKnGWf6EaBh+qOvZ5c43qnxP0jJIraVcyQJQA0ED4ElUBVwUh6ZhQJGtdJD7rKG3gwYC1L6L+inVIZ4I2jEuM2NgLt+nQNEf7+dEnZ4vCfS+pg63iP+uxGLlXRbI+gONR3LQKB2B/Wmt+QWah92W9TlKQdzbDCDCK7vlqvbGCxOSjHKH/8QnNM/05FzUYRO+GpAMnwUPs2G8vbO0ieSy+JtKoLbSvIGK4Yj3PAAl7YM= haskoli@server01",
+        "id_rsa": "-----BEGIN OPENSSH PRIVATE KEY-----\n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\n-----END OPENSSH PRIVATE KEY-----",
+        "id_rsa.pub": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDtDol+DBsUDNBwXG/GJkpG8wZplnQIoeptON2PcV8aaBpZulggccX4v7OckxVQqXXmWpzVdsdg0xukD2nxUf7raet3gTaqt+JjAax9Ny+lwHOPWwXfdckRMiNAlIQIyMdsgFDGsAUZQlnRplM4zFGW3PgMg+3TKcDn6gzQmYM9Rhc8+AE/345HcMXen5ZDZN8ge4e/HfQQPwrpU0dgcy6IQFHhcLCQaEY3spjjMCzJpJAlmUEMb7DgViXoxEvrARylCpVZE9LVQPqsCMkK/Ni7aMxA3CIuS9iadmgrYXOsJUkUOyhG86gmMgimA5sf+CQs65f65K6cweYEaIXvpOMF/c74kElgfS9fWPFvGOtLt7EWi1K7yjwaZCd/iu9O65UXBbddk4Fr+M//16O2vsFv7QVOGWe7Sa33U14cRS/SM89BTNfKfCP8BdzDsdsQNAtjX1oae5woTs8GCQTm/h5TU46cJkRmhiHw8BGASEP53r7so5+fNCxEdAKQXlzD1FHmc+9gCeZRXKhCGQFEZKVLmxhqPCtLB7cj5PSrR+MziGbCVQ1bUTaXZQZP44YmAcmT8qURwzal5EkHhbAIkGRQ8t9O9mX+vyKmcdbHM+4vFdBVeH/msMRBHJdAK+dAX2Er4igLbL+gEtTqflEhMat1KOvE9Xcy1xFZ+sn1c7kREQ== haskoli@server.test",
+        "known_hosts": "github.com,140.82.121.4 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=="
+      },
       ".config": {
         "xpad": {
-          "content-001": "Server credentials:\ndb_user: app_user\ndb_pass: D3vS3rver#123\nAdmin portal: https://admin.example.com\nuser: admin@example.com\npass: Super$ecure2023"
-        }
-      },
-      "readme.txt": "Welcome to the server!\n\nThis machine is used for development and testing purposes.\nPlease do not make changes without consulting the admin team."
-    }
-  },
-  "root": {
-    ".bashrc": "# ~/.bashrc: executed by bash for non-login shells\n\n# If not running interactively, don't do anything\n[ -z \"$PS1\" ] && return\n\n# don't put duplicate lines in the history\nHISTCONTROL=ignoredups\n\n# check the window size after each command\nshopt -s checkwinsize\n\n# make less more friendly for non-text input files\n[ -x /usr/bin/lesspipe ] && eval \"$(SHELL=/bin/sh lesspipe)\"\n\n# enable color prompt\nPS1='\\[\\033[01;31m\\]\\u@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '\n\n# enable color support of ls\nalias ls='ls --color=auto'\nalias grep='grep --color=auto'",
-    ".bash_history": "systemctl status mysql\nnetstat -tuln\nless /var/log/auth.log\ntail -f /var/log/syslog\nufw status\nufw allow 80/tcp\nufw allow 443/tcp\napt update && apt upgrade -y\nusermod -aG sudo haskoli\nchmod 600 /etc/ssh/ssh_host_*_key\nchown -R www-data:www-data /var/www/html\nmysql -u root -p\nmysqldump --all-databases > /root/backups/db_backup_$(date +%Y%m%d).sql",
-    ".bash_logout": "# ~/.bash_logout: executed by bash(1) when login shell exits.\n\n# when leaving the console clear the screen to increase privacy\nif [ \"$SHLVL\" = 1 ]; then\n    [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q\nfi",
-    ".bash_profile": "# ~/.bash_profile: executed by bash(1) for login shells.\n\n# include .bashrc if it exists\nif [ -f ~/.bashrc ]; then\n  . ~/.bashrc\nfi",
-    ".profile": "# ~/.profile: executed by Bourne-compatible login shells.\n\nif [ \"$BASH\" ]; then\n  if [ -f ~/.bashrc ]; then\n    . ~/.bashrc\n  fi\nfi\n\nmesg n 2> /dev/null || true"
-  },
-  "var": {
-    "log": {
-      "nginx": {
-        "access.log": "192.168.1.100 - - [27/Feb/2024:10:23:45 +0000] \"GET / HTTP/1.1\" 200 615 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36\"\n192.168.1.100 - - [27/Feb/2024:10:23:47 +0000] \"GET /favicon.ico HTTP/1.1\" 404 153 \"http://example.com/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36\"\n203.0.113.45 - - [27/Feb/2024:15:48:12 +0000] \"POST /api/login HTTP/1.1\" 200 245 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15\"\n203.0.113.45 - - [27/Feb/2024:15:48:15 +0000] \"GET /api/users HTTP/1.1\" 200 2543 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15\"",
-        "error.log": "2024/02/27 10:20:34 [notice] 1234#1234: using the \"epoll\" event method\n2024/02/27 10:20:34 [notice] 1234#1234: nginx/1.18.0\n2024/02/27 10:20:34 [notice] 1234#1234: built by gcc 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)\n2024/02/27 10:20:34 [notice] 1234#1234: OS: Linux 5.15.0-76-generic\n2024/02/27 15:42:17 [error] 5678#5678: *123 FastCGI sent in stderr: \"PHP message: PHP Warning:  include(config.php): failed to open stream: No such file or directory in /var/www/example.com/index.php on line 3\" while reading response header from upstream, client: 203.0.113.45, server: example.com, request: \"GET / HTTP/1.1\", upstream: \"fastcgi://unix:/var/run/php/php7.4-fpm.sock:\", host: \"example.com\""
-      },
-      "mysql": {
-        "error.log": "2024-02-27T10:12:34.123456Z 0 [Note] mysqld: ready for connections.\n2024-02-27T14:22:17.654321Z 56 [Warning] Access denied for user 'webapp'@'localhost' (using password: YES)\n2024-02-27T16:45:22.789012Z 0 [Note] InnoDB: page_cleaner: 1000ms intended loop took 3426ms. The settings might not be optimal."
-      },
-      "mail.log": "Feb 27 08:12:34 server01 postfix/smtpd[1234]: connect from localhost[127.0.0.1]\nFeb 27 08:12:35 server01 postfix/smtpd[1234]: 9B8765432: client=localhost[127.0.0.1]\nFeb 27 08:12:36 server01 postfix/cleanup[2345]: 9B8765432: message-id=<20240227081236.9B8765432@server01.example.com>\nFeb 27 08:12:37 server01 postfix/qmgr[3456]: 9B8765432: from=<root@server01.example.com>, size=654, nrcpt=1 (queue active)\nFeb 27 08:12:38 server01 postfix/smtp[4567]: 9B8765432: to=<admin@example.com>, relay=mail.example.com[203.0.113.10]:25, delay=3.6, delays=0.08/0.01/1.5/2.1, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 8D7F43A61)",
-      "cron": "Feb 27 00:00:01 server01 CRON[1234]: (root) CMD (cd / && run-parts --report /etc/cron.daily)\nFeb 27 01:00:01 server01 CRON[2345]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)\nFeb 27 02:00:01 server01 CRON[3456]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)\nFeb 27 03:00:01 server01 CRON[4567]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)",
-      "fail2ban.log": "2024-02-27 03:12:19 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:19\n2024-02-27 03:12:25 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:25\n2024-02-27 03:12:33 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:33\n2024-02-27 03:12:34 fail2ban.actions        [1234]: NOTICE  [sshd] Ban 103.25.85.142\n2024-02-28 03:12:34 fail2ban.actions        [1234]: NOTICE  [sshd] Unban 103.25.85.142",
-      "bash.log": "2024-02-27 09:15:45|haskoli|tty1|cd /var/www/html\n2024-02-27 09:16:12|haskoli|tty1|ls -la\n2024-02-27 09:17:33|haskoli|tty1|cat index.php\n2024-02-27 09:18:05|root|tty2|systemctl status apache2"
-    },
-    "spool": {
-      "cron": {
-        "crontabs": {
-          "root": "# DO NOT EDIT THIS FILE - edit the master and reinstall.\n# (/tmp/crontab.XXXXJBHAQp installed on Wed Feb 17 14:22:12 2024)\n# (Cron version -- $Id: crontab.c,v 2.13 1994/01/17 03:20:37 vixie Exp $)\n0 2 * * * /usr/local/bin/backup.sh > /dev/null 2>&1\n15 4 * * * /opt/scripts/system-maintenance.sh > /dev/null 2>&1",
-          "haskoli": "# DO NOT EDIT THIS FILE - edit the master and reinstall.\n# (/tmp/crontab.XXXXqwerty installed on Wed Feb 24 16:45:37 2024)\n# (Cron version -- $Id: crontab.c,v 2.13 1994/01/17 03:20:37 vixie Exp $)\n30 * * * * /home/haskoli/scripts/check-updates.sh > /dev/null 2>&1"
-        }
-      },
-      "mail": {
-        "haskoli": "From: System Admin <root@server01.example.com>\nTo: haskoli@localhost\nSubject: System Update Notification\nDate: Tue, 27 Feb 2024 08:12:37 +0000\n\nThis is an automated message to inform you that system updates will be applied tonight at 02:00 UTC.\nThe server might be briefly unavailable during this maintenance window.\n\nRegards,\nSystem Administrator"
-      }
-    },
-    "www": {
-      "html": {
-        "index.html": "<html><head><title>Test Page</title></head><body><h1>It works!</h1></body></html>",
-        "phpinfo.php": "<?php\n// Show PHP information\nphpinfo();\n?>",
-        "db.php": "<?php\n// Database connection configuration\n$db_host = 'localhost';\n$db_user = 'webapp';\n$db_pass = 'webappdb123';\n$db_name = 'appdata';\n\n// Create connection\n$conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);\n\n// Check connection\nif (!$conn) {\n    die(\"Connection failed: \" . mysqli_connect_error());\n}\n?>"
-      }
-    }
-  },
-  "usr": {
-    "bin": {
-      "python3": "Python 3 interpreter binary"
-    },
-    "local": {
-      "bin": {
-        "backup.sh": "#!/bin/bash\n# Backup important data\n\nBACKUP_DIR=\"/var/backups/$(date +%Y-%m-%d)\"\nmkdir -p $BACKUP_DIR\n\n# Backup website files\ntar -czf $BACKUP_DIR/www-html.tar.gz /var/www/html\n\n# Backup database\nmysqldump --all-databases -u root -p'rootDBpass123' > $BACKUP_DIR/all-databases.sql\n\n# Set permissions\nchmod 600 $BACKUP_DIR/all-databases.sql\nchown root:root $BACKUP_DIR/*\n\n# Cleanup old backups (keep last 7 days)\nfind /var/backups/ -type d -mtime +7 -exec rm -rf {} \\; 2>/dev/null",
-        "system-maintenance.sh": "#!/bin/bash\n# System maintenance tasks\n\n# Update package lists\napt-get update > /dev/null\n\n# Check disk space\ndf -h / >> /var/log/disk-usage.log\n\n# Check system load\nuptime >> /var/log/system-load.log\n\n# Cleanup temp files\nfind /tmp -type f -mtime +3 -delete\n"
-      },
-      "apache2": {
-        "htdocs": {
-          "index.html": "<html><head><title>Welcome to Apache</title></head><body><h1>It works!</h1><p>This is the default web page for this server.</p></body></html>"
+          "content-001": "Server credentials:\ndb_user: app_user\ndb_pass: D3vS3rver#123\nAdmin portal: https://admin.example.com\nuser: admin@example.com\npass: Super\\$ecure2023"
         },
-        "conf": {
-          "httpd.conf": "# Apache HTTP Server Configuration\nServerRoot \"/usr/local/apache2\"\nListen 8080\n\nLoadModule alias_module modules/mod_alias.so\nLoadModule auth_basic_module modules/mod_auth_basic.so\nLoadModule authn_file_module modules/mod_authn_file.so\nLoadModule authz_core_module modules/mod_authz_core.so\nLoadModule authz_host_module modules/mod_authz_host.so\nLoadModule authz_user_module modules/mod_authz_user.so\nLoadModule dir_module modules/mod_dir.so\nLoadModule mime_module modules/mod_mime.so\nLoadModule rewrite_module modules/mod_rewrite.so\nLoadModule php_module modules/libphp.so\n\nServerAdmin admin@example.com\nServerName example.com\n\nDocumentRoot \"/usr/local/apache2/htdocs\"\n\n<Directory \"/usr/local/apache2/htdocs\">\n    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted\n</Directory>\n\nDirectoryIndex index.html index.php\n\nAddType application/x-httpd-php .php\n"
+        "nautilus": {
+          "bookmarks": "file:///home/haskoli/Documents Documents\nfile:///home/haskoli/Downloads Downloads\nfile:///home/haskoli/Pictures Pictures\nfile:///var/www/html Web Root\nftp://ftp.internal.example.com/ Internal FTP"
         }
       },
-      "etc": {
+      ".mysql_history": "show databases;\nuse appdata;\nshow tables;\nselect * from users limit 10;\nselect username, password from users where admin=1;\nCREATE USER 'backup'@'localhost' IDENTIFIED BY 'bkp@p4ss#2023';\nGRANT SELECT ON *.* TO 'backup'@'localhost';\nFLUSH PRIVILEGES;",
+      ".viminfo": "# This viminfo file was generated by Vim 8.2.\n# You may edit it if you're careful!\n\n# Viminfo version\n|1,4\n\n# Value of 'encoding' when this file was written\n*encoding=utf-8\n\n# hlsearch on (H) or off (h):\n~h\n# Command Line History (newest to oldest):\n:q!\n|2,0,1676538206,\"q!\"\n:wq\n|2,0,1676538195,\"wq\"\n:w\n|2,0,1676538183,\"w\"\n:q\n|2,0,1676538162,\"q\"\n\n# Search String History (newest to oldest):\n\n# Expression History (newest to oldest):\n\n# Input Line History (newest to oldest):\n\n# Debug Line History (newest to oldest):\n\n# Registers:\n\"\"1\t\t\tMENU_PASSWORD=\\$uper_\\$3cur3!P@\\$\\$w0rd\n|3,1,1,0,1,0,1676538191,\"MENU_PASSWORD=\\\\$uper_\\\\$3cur3!P@\\\\$\\\\$w0rd\"",
+      "Documents": {
+        "project_notes.txt": "# Development Notes\n\n## Server Details\nProduction: 203.0.113.20\nStaging: 192.168.10.50\nDev: localhost\n\n## Database\nHost: db.internal.example.com\nUser: app_writer\nPass: Pr0d-DB-P@\\$\\$w0rd\n\n## TODO\n- Fix login issue on Safari\n- Update SSL certificates (expires next month)\n- Add rate limiting to REST API\n- Investigate MongoDB for caching layer",
+        "meeting_minutes.txt": "# Team Meeting - Feb 15, 2024\n\n## Attendees\n- John (Team Lead)\n- Sarah (Backend)\n- Mark (Frontend)\n- Lisa (QA)\n- Me\n\n## Action Items\n1. Deploy security patches by Feb 20\n2. Complete database migration script\n3. Test new authentication flow\n4. Update AWS security groups\n\n## Notes\nJohn mentioned concerns about the hardcoded credentials in config.php - need to move these to environment variables ASAP.\n\nNeed to review SSH access - too many users have root access.",
+        "passwords.kdbx": "KeePass Password Database Binary File"
+      },
+      "Downloads": {
+        "nginx-1.24.0.tar.gz": "NGINX source package binary",
+        "latest_backup.sql": "-- MySQL dump 10.13  Distrib 8.0.28\n-- Host: localhost    Database: appdata\n-- Server version 8.0.28\n\nCREATE TABLE `users` (\n  `id` int NOT NULL AUTO_INCREMENT,\n  `username` varchar(50) NOT NULL,\n  `password` varchar(255) NOT NULL,\n  `email` varchar(100) NOT NULL,\n  `admin` tinyint(1) DEFAULT '0',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;\n\nINSERT INTO `users` VALUES (1,'admin','\\$2y\\$10\\$rBBKtV8cOVj.wY9jWJJCKehkQhxoJH7I.j9zAXXLhFq1W3fz4K6lG','admin@example.com',1);"
+      },
+      "Pictures": {
+        "server_diagram.png": "PNG image binary data"
+      },
+      "projects": {
+        "webapp": {
+          ".env": "APP_NAME=InternalApp\nAPP_ENV=development\nAPP_KEY=base64:jK7DNVGAd7PLS2FpH2LpKzf3vgfTRLsKR4cUaLIuAx0=\nAPP_DEBUG=true\n\nDB_CONNECTION=mysql\nDB_HOST=db.internal.example.com\nDB_PORT=3306\nDB_DATABASE=appdata\nDB_USERNAME=app_user\nDB_PASSWORD=D3vS3rver#123\n\nAWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE\nAWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+          "config.php": "<?php\n// Configuration file\n\n// Database settings\n$db_host = 'localhost';\n$db_user = 'webapp';\n$db_pass = 'webappdb123';\n$db_name = 'appdata';\n\n// API Keys\n$api_keys = [\n    'production' => 's3cr3t_k3y_h3r3',\n    'staging' => 'staging_k3y_h3r3',\n    'development' => 'dev_k3y_h3r3'\n];\n\n// SMTP Configuration\n$smtp_host = 'smtp.example.com';\n$smtp_user = 'notifications@example.com';\n$smtp_pass = 'Sm7p@P4ss2023!';\n$smtp_port = 587;\n?>",
+          "backup.sh": "#!/bin/bash\n# Backup script for web application\n\n# Database credentials\nDB_USER=\"backup\"\nDB_PASS=\"bkp@p4ss#2023\"\nDB_NAME=\"appdata\"\n\n# Backup directory\nBACKUP_DIR=\"/home/haskoli/backups\"\nDATE=$(date +%Y-%m-%d)\n\n# Create backup directory if it doesn't exist\nmkdir -p $BACKUP_DIR\n\n# Backup database\nmysqldump -u $DB_USER -p$DB_PASS $DB_NAME > $BACKUP_DIR/db_backup_$DATE.sql\n\n# Backup application files\ntar -czf $BACKUP_DIR/app_backup_$DATE.tar.gz /var/www/html\n\n# Set appropriate permissions\nchmod 600 $BACKUP_DIR/*.sql\nchmod 600 $BACKUP_DIR/*.tar.gz\n\n# Upload to remote backup server\nscp $BACKUP_DIR/db_backup_$DATE.sql backup@192.168.1.10:/remote/backups/\nscp $BACKUP_DIR/app_backup_$DATE.tar.gz backup@192.168.1.10:/remote/backups/\n\n# Clean up old backups (keep only last 7 days)\nfind $BACKUP_DIR -type f -name \"*.sql\" -mtime +7 -delete\nfind $BACKUP_DIR -type f -name \"*.tar.gz\" -mtime +7 -delete"
+        }
+      },
+      "scripts": {
+        "check-updates.sh": "#!/bin/bash\n# Check for system updates\n\n# Log file\nLOG_FILE=\"/home/haskoli/logs/updates.log\"\nmkdir -p $(dirname $LOG_FILE)\n\n# Check for updates\necho \"[$(date)] Checking for updates...\" >> $LOG_FILE\nsudo apt update >> $LOG_FILE 2>&1\nUPDATES=$(apt list --upgradable 2>/dev/null | grep -v \"Listing\" | wc -l)\n\n# Report results\necho \"[$(date)] Found $UPDATES updates available\" >> $LOG_FILE\n\n# Send notification if important updates\nif [[ $UPDATES -gt 0 ]]; then\n    SECURITY=$(apt list --upgradable 2>/dev/null | grep -i security | wc -l)\n    if [[ $SECURITY -gt 0 ]]; then\n        echo \"[$(date)] Found $SECURITY security updates\" >> $LOG_FILE\n        echo \"Important security updates available\" | mail -s \"Security Updates Available\" haskoli@localhost\n    fi\nfi"
+      },
+      "logs": {
+        "deploy.log": "2024-02-15 09:34:12 [INFO] Starting deployment of app version 2.4.5\n2024-02-15 09:34:15 [INFO] Backing up current version\n2024-02-15 09:34:22 [INFO] Database backup completed\n2024-02-15 09:34:25 [INFO] Copying new files\n2024-02-15 09:34:45 [INFO] Running database migrations\n2024-02-15 09:34:50 [ERROR] Migration failed: Foreign key constraint failed\n2024-02-15 09:35:10 [INFO] Rolling back migration\n2024-02-15 09:35:18 [INFO] Restoring previous version\n2024-02-15 09:35:25 [INFO] Deployment failed - notifying team",
+        "updates.log": "2024-02-26 00:30:01 [Mon Feb 26 00:30:01 UTC 2024] Checking for updates...\n2024-02-26 00:30:05 [Mon Feb 26 00:30:05 UTC 2024] Found 14 updates available\n2024-02-26 00:30:05 [Mon Feb 26 00:30:05 UTC 2024] Found 3 security updates\n2024-02-27 00:30:01 [Tue Feb 27 00:30:01 UTC 2024] Checking for updates...\n2024-02-27 00:30:06 [Tue Feb 27 00:30:06 UTC 2024] Found 14 updates available\n2024-02-27 00:30:06 [Tue Feb 27 00:30:06 UTC 2024] Found 3 security updates\n2024-02-28 00:30:01 [Wed Feb 28 00:30:01 UTC 2024] Checking for updates...\n2024-02-28 00:30:05 [Wed Feb 28 00:30:05 UTC 2024] Found 16 updates available\n2024-02-28 00:30:05 [Wed Feb 28 00:30:05 UTC 2024] Found 5 security updates"
+      },
+      "backups": {
+        "db_backup_2024-02-27.sql": "-- MySQL dump 10.13  Distrib 8.0.28\n-- Host: localhost    Database: appdata\n-- Server version  8.0.28\n\nCREATE DATABASE IF NOT EXISTS `appdata`;\nUSE `appdata`;\n\nCREATE TABLE `users` (\n  `id` int NOT NULL AUTO_INCREMENT,\n  `username` varchar(50) NOT NULL,\n  `password` varchar(255) NOT NULL,\n  `email` varchar(100) NOT NULL,\n  `admin` tinyint(1) DEFAULT '0',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;\n\nINSERT INTO `users` VALUES (1,'admin','$2y$10$rBBKtV8cOVj.wY9jWJJCKehkQhxoJH7I.j9zAXXLhFq1W3fz4K6lG','admin@example.com',1);\nINSERT INTO `users` VALUES (2,'john','$2y$10$QaHk5Mc5JVjaI0KYQ9DlZe8UQidxl7UK.527kJKYe0FLsLQ8rhkpy','john@example.com',0);\nINSERT INTO `users` VALUES (3,'sarah','$2y$10$8D8X9mQ1K8XM2oBH4XJuJuRL6QdD6xyor4yR8UhnzKBpJvcY4JWjm','sarah@example.com',0);\n\nCREATE TABLE `config` (\n  `key` varchar(50) NOT NULL,\n  `value` text NOT NULL,\n  PRIMARY KEY (`key`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;\n\nINSERT INTO `config` VALUES ('api_key','s3cr3t_k3y_h3r3');\nINSERT INTO `config` VALUES ('debug_mode','true');\nINSERT INTO `config` VALUES ('mail_host','smtp.example.com');\nINSERT INTO `config` VALUES ('mail_user','notifications@example.com');\nINSERT INTO `config` VALUES ('mail_pass','Sm7p@P4ss2023!');",
+        "app_backup_2024-02-27.tar.gz": "Binary data of compressed application backup"
+      },
+      "bin": {
+        "update-ssl.sh": "#!/bin/bash\n\n# Script to update SSL certificates\n\n# Certificate paths\nCERT_DIR=\"/etc/ssl/certs/example.com\"\nCERT_FILE=\"$CERT_DIR/cert.pem\"\nKEY_FILE=\"$CERT_DIR/privkey.pem\"\nCHAIN_FILE=\"$CERT_DIR/chain.pem\"\n\n# Create directory if it doesn't exist\nmkdir -p $CERT_DIR\n\n# Generate self-signed certificate\nopenssl req -x509 -newkey rsa:4096 -keyout $KEY_FILE -out $CERT_FILE -days 365 -nodes -subj \"/C=US/ST=State/L=City/O=Organization/CN=example.com\"\n\n# Copy to chain file\ncp $CERT_FILE $CHAIN_FILE\n\n# Set permissions\nchmod 644 $CERT_FILE $CHAIN_FILE\nchmod 600 $KEY_FILE\n\n# Restart web services\nsystemctl restart apache2\nsystemctl restart nginx\n\necho \"SSL certificates updated successfully.\"",
+        "cleanup.sh": "#!/bin/bash\n\n# Cleanup script for temporary files and logs\n\n# Paths\nTMP_DIR=\"/tmp\"\nLOG_DIR=\"/home/haskoli/logs\"\nOLD_BACKUPS=\"/home/haskoli/backups\"\n\n# Remove files older than 7 days from temporary directory\nfind $TMP_DIR -type f -mtime +7 -delete\n\n# Compress logs older than 14 days\nfind $LOG_DIR -type f -mtime +14 -name \"*.log\" -exec gzip {} \\;\n\n# Remove backups older than 30 days\nfind $OLD_BACKUPS -type f -mtime +30 -delete\n\necho \"Cleanup completed on $(date)\""
+      },
+      "public_html": {
+        "index.html": "<html>\n<head>\n  <title>Welcome to my personal site</title>\n  <style>\n    body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }\n    h1 { color: #333; }\n    .container { max-width: 800px; margin: 0 auto; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>Welcome</h1>\n    <p>This is my personal website hosted on the development server.</p>\n    <p>I'm a system administrator working on various infrastructure projects.</p>\n    <h2>Links</h2>\n    <ul>\n      <li><a href=\"/projects.html\">Projects</a></li>\n      <li><a href=\"/contact.html\">Contact</a></li>\n    </ul>\n  </div>\n</body>\n</html>",
+        "projects.html": "<html>\n<head>\n  <title>My Projects</title>\n  <style>\n    body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }\n    h1 { color: #333; }\n    .container { max-width: 800px; margin: 0 auto; }\n    .project { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>My Projects</h1>\n    <div class=\"project\">\n      <h2>Server Monitoring Dashboard</h2>\n      <p>A dashboard for monitoring multiple server instances. Built with Node.js and Express.</p>\n      <p><strong>Technologies:</strong> Node.js, Express, MongoDB, Socket.IO</p>\n    </div>\n    <div class=\"project\">\n      <h2>Automated Backup System</h2>\n      <p>Bash scripts for automated database and file backups with retention policies.</p>\n      <p><strong>Technologies:</strong> Bash, MySQL, rsync</p>\n    </div>\n    <p><a href=\"/index.html\">Back to home</a></p>\n  </div>\n</body>\n</html>",
+        "contact.html": "<html>\n<head>\n  <title>Contact Me</title>\n  <style>\n    body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }\n    h1 { color: #333; }\n    .container { max-width: 800px; margin: 0 auto; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>Contact Information</h1>\n    <p>Email: haskoli@example.com</p>\n    <p>GitHub: github.com/haskoli</p>\n    <p>LinkedIn: linkedin.com/in/haskoli</p>\n    <p><a href=\"/index.html\">Back to home</a></p>\n  </div>\n</body>\n</html>"
+      },
+      "readme.txt": "Welcome to the server!\n\nThis machine is used for development and testing purposes.\nPlease do not make changes without consulting the admin team.\n\nUseful commands:\n- sudo systemctl restart apache2 (restart web server)\n- tail -f /var/log/apache2/error.log (view web server errors)\n- mysql -u appuser -p (connect to database)\n\nFor any issues, contact: admin@example.com"
+    },
+    "root": {
+      ".bashrc": "# ~/.bashrc: executed by bash for non-login shells\n\n# If not running interactively, don't do anything\n[ -z \"$PS1\" ] && return\n\n# don't put duplicate lines in the history\nHISTCONTROL=ignoredups\n\n# check the window size after each command\nshopt -s checkwinsize\n\n# make less more friendly for non-text input files\n[ -x /usr/bin/lesspipe ] && eval \"$(SHELL=/bin/sh lesspipe)\"\n\n# enable color prompt\nPS1='\\[\\033[01;31m\\]\\u@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '\n\n# enable color support of ls\nalias ls='ls --color=auto'\nalias grep='grep --color=auto'",
+      ".bash_history": "systemctl status mysql\nnetstat -tuln\nless /var/log/auth.log\ntail -f /var/log/syslog\nufw status\nufw allow 80/tcp\nufw allow 443/tcp\napt update && apt upgrade -y\nusermod -aG sudo haskoli\nchmod 600 /etc/ssh/ssh_host_*_key\nchown -R www-data:www-data /var/www/html\nmysql -u root -p\nmysqldump --all-databases > /root/backups/db_backup_$(date +%Y%m%d).sql",
+      ".bash_logout": "# ~/.bash_logout: executed by bash(1) when login shell exits.\n\n# when leaving the console clear the screen to increase privacy\nif [ \"$SHLVL\" = 1 ]; then\n    [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q\nfi",
+      ".bash_profile": "# ~/.bash_profile: executed by bash(1) for login shells.\n\n# include .bashrc if it exists\nif [ -f ~/.bashrc ]; then\n  . ~/.bashrc\nfi",
+      ".profile": "# ~/.profile: executed by Bourne-compatible login shells.\n\nif [ \"$BASH\" ]; then\n  if [ -f ~/.bashrc ]; then\n    . ~/.bashrc\n  fi\nfi\n\nmesg n 2> /dev/null || true"
+    },
+    "var": {
+      "log": {
         "nginx": {
-          "nginx.conf": "user nginx;\nworker_processes auto;\nworker_rlimit_nofile 65535;\n\nevents {\n    worker_connections 65535;\n    multi_accept on;\n}\n\nhttp {\n    include /usr/local/etc/nginx/mime.types;\n    default_type application/octet-stream;\n\n    access_log /var/log/nginx/access.log;\n    error_log /var/log/nginx/error.log;\n\n    server {\n        listen 80;\n        server_name localhost;\n\n        location / {\n            root /usr/local/www/nginx-dist;\n            index index.html index.htm;\n        }\n    }\n}"
+          "access.log": "192.168.1.100 - - [27/Feb/2024:10:23:45 +0000] \"GET / HTTP/1.1\" 200 615 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36\"\n192.168.1.100 - - [27/Feb/2024:10:23:47 +0000] \"GET /favicon.ico HTTP/1.1\" 404 153 \"http://example.com/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36\"\n203.0.113.45 - - [27/Feb/2024:15:48:12 +0000] \"POST /api/login HTTP/1.1\" 200 245 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15\"\n203.0.113.45 - - [27/Feb/2024:15:48:15 +0000] \"GET /api/users HTTP/1.1\" 200 2543 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15\"",
+          "error.log": "2024/02/27 10:20:34 [notice] 1234#1234: using the \"epoll\" event method\n2024/02/27 10:20:34 [notice] 1234#1234: nginx/1.18.0\n2024/02/27 10:20:34 [notice] 1234#1234: built by gcc 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)\n2024/02/27 10:20:34 [notice] 1234#1234: OS: Linux 5.15.0-76-generic\n2024/02/27 15:42:17 [error] 5678#5678: *123 FastCGI sent in stderr: \"PHP message: PHP Warning:  include(config.php): failed to open stream: No such file or directory in /var/www/example.com/index.php on line 3\" while reading response header from upstream, client: 203.0.113.45, server: example.com, request: \"GET / HTTP/1.1\", upstream: \"fastcgi://unix:/var/run/php/php7.4-fpm.sock:\", host: \"example.com\""
+        },
+        "mysql": {
+          "error.log": "2024-02-27T10:12:34.123456Z 0 [Note] mysqld: ready for connections.\n2024-02-27T14:22:17.654321Z 56 [Warning] Access denied for user 'webapp'@'localhost' (using password: YES)\n2024-02-27T16:45:22.789012Z 0 [Note] InnoDB: page_cleaner: 1000ms intended loop took 3426ms. The settings might not be optimal."
+        },
+        "mail.log": "Feb 27 08:12:34 server01 postfix/smtpd[1234]: connect from localhost[127.0.0.1]\nFeb 27 08:12:35 server01 postfix/smtpd[1234]: 9B8765432: client=localhost[127.0.0.1]\nFeb 27 08:12:36 server01 postfix/cleanup[2345]: 9B8765432: message-id=<20240227081236.9B8765432@server01.example.com>\nFeb 27 08:12:37 server01 postfix/qmgr[3456]: 9B8765432: from=<root@server01.example.com>, size=654, nrcpt=1 (queue active)\nFeb 27 08:12:38 server01 postfix/smtp[4567]: 9B8765432: to=<admin@example.com>, relay=mail.example.com[203.0.113.10]:25, delay=3.6, delays=0.08/0.01/1.5/2.1, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 8D7F43A61)",
+        "cron": "Feb 27 00:00:01 server01 CRON[1234]: (root) CMD (cd / && run-parts --report /etc/cron.daily)\nFeb 27 01:00:01 server01 CRON[2345]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)\nFeb 27 02:00:01 server01 CRON[3456]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)\nFeb 27 03:00:01 server01 CRON[4567]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)",
+        "fail2ban.log": "2024-02-27 03:12:19 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:19\n2024-02-27 03:12:25 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:25\n2024-02-27 03:12:33 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:33\n2024-02-27 03:12:34 fail2ban.actions        [1234]: NOTICE  [sshd] Ban 103.25.85.142\n2024-02-28 03:12:34 fail2ban.actions        [1234]: NOTICE  [sshd] Unban 103.25.85.142",
+        "bash.log": "2024-02-27 09:15:45|haskoli|tty1|cd /var/www/html\n2024-02-27 09:16:12|haskoli|tty1|ls -la\n2024-02-27 09:17:33|haskoli|tty1|cat index.php\n2024-02-27 09:18:05|root|tty2|systemctl status apache2"
+      },
+      "spool": {
+        "cron": {
+          "crontabs": {
+            "root": "# DO NOT EDIT THIS FILE - edit the master and reinstall.\n# (/tmp/crontab.XXXXJBHAQp installed on Wed Feb 17 14:22:12 2024)\n# (Cron version -- $Id: crontab.c,v 2.13 1994/01/17 03:20:37 vixie Exp $)\n0 2 * * * /usr/local/bin/backup.sh > /dev/null 2>&1\n15 4 * * * /opt/scripts/system-maintenance.sh > /dev/null 2>&1",
+            "haskoli": "# DO NOT EDIT THIS FILE - edit the master and reinstall.\n# (/tmp/crontab.XXXXqwerty installed on Wed Feb 24 16:45:37 2024)\n# (Cron version -- $Id: crontab.c,v 2.13 1994/01/17 03:20:37 vixie Exp $)\n30 * * * * /home/haskoli/scripts/check-updates.sh > /dev/null 2>&1"
+          }
+        },
+        "mail": {
+          "haskoli": "From: System Admin <root@server01.example.com>\nTo: haskoli@localhost\nSubject: System Update Notification\nDate: Tue, 27 Feb 2024 08:12:37 +0000\n\nThis is an automated message to inform you that system updates will be applied tonight at 02:00 UTC.\nThe server might be briefly unavailable during this maintenance window.\n\nRegards,\nSystem Administrator"
+        }
+      },
+      "www": {
+        "html": {
+          "index.html": "<html><head><title>Test Page</title></head><body><h1>It works!</h1></body></html>",
+          "phpinfo.php": "<?php\n// Show PHP information\nphpinfo();\n?>",
+          "db.php": "<?php\n// Database connection configuration\n$db_host = 'localhost';\n$db_user = 'webapp';\n$db_pass = 'webappdb123';\n$db_name = 'appdata';\n\n// Create connection\n$conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);\n\n// Check connection\nif (!$conn) {\n    die(\"Connection failed: \" . mysqli_connect_error());\n}\n?>"
         }
       }
-    }
-  },
-  "tmp": {
-    "user-uploads": {
-      "test.php": "<?php\n// Test upload file\necho \"Hello World!\";\n?>",
-      "data.csv": "id,name,email\n1,John Doe,john@example.com\n2,Jane Smith,jane@example.com\n3,Bob Johnson,bob@example.com"
     },
-    "sess_bd76hrjqp3tskeq0lad4tpb9f7": "user_id|s:1:\"5\";username|s:5:\"admin\";logged_in|b:1;"
-  },
-  "opt": {
-    "backup": {
-      "scripts": {
-        "backup-db.sh": "#!/bin/bash\n# Backup database\nDB_USER=\"backup\"\nDB_PASS=\"backupuser123\"\nBACKUP_DIR=\"/opt/backup/mysql\"\nDATE=$(date +%Y-%m-%d)\n\nmkdir -p $BACKUP_DIR\n\nmysqldump --all-databases -u $DB_USER -p$DB_PASS > $BACKUP_DIR/all-databases-$DATE.sql"
+    "usr": {
+      "bin": {
+        "python3": "Python 3 interpreter binary"
+      },
+      "local": {
+        "bin": {
+          "backup.sh": "#!/bin/bash\n# Backup important data\n\nBACKUP_DIR=\"/var/backups/$(date +%Y-%m-%d)\"\nmkdir -p $BACKUP_DIR\n\n# Backup website files\ntar -czf $BACKUP_DIR/www-html.tar.gz /var/www/html\n\n# Backup database\nmysqldump --all-databases -u root -p'rootDBpass123' > $BACKUP_DIR/all-databases.sql\n\n# Set permissions\nchmod 600 $BACKUP_DIR/all-databases.sql\nchown root:root $BACKUP_DIR/*\n\n# Cleanup old backups (keep last 7 days)\nfind /var/backups/ -type d -mtime +7 -exec rm -rf {} \\; 2>/dev/null",
+          "system-maintenance.sh": "#!/bin/bash\n# System maintenance tasks\n\n# Update package lists\napt-get update > /dev/null\n\n# Check disk space\ndf -h / >> /var/log/disk-usage.log\n\n# Check system load\nuptime >> /var/log/system-load.log\n\n# Cleanup temp files\nfind /tmp -type f -mtime +3 -delete\n"
+        },
+        "apache2": {
+          "htdocs": {
+            "index.html": "<html><head><title>Welcome to Apache</title></head><body><h1>It works!</h1><p>This is the default web page for this server.</p></body></html>"
+          },
+          "conf": {
+            "httpd.conf": "# Apache HTTP Server Configuration\nServerRoot \"/usr/local/apache2\"\nListen 8080\n\nLoadModule alias_module modules/mod_alias.so\nLoadModule auth_basic_module modules/mod_auth_basic.so\nLoadModule authn_file_module modules/mod_authn_file.so\nLoadModule authz_core_module modules/mod_authz_core.so\nLoadModule authz_host_module modules/mod_authz_host.so\nLoadModule authz_user_module modules/mod_authz_user.so\nLoadModule dir_module modules/mod_dir.so\nLoadModule mime_module modules/mod_mime.so\nLoadModule rewrite_module modules/mod_rewrite.so\nLoadModule php_module modules/libphp.so\n\nServerAdmin admin@example.com\nServerName example.com\n\nDocumentRoot \"/usr/local/apache2/htdocs\"\n\n<Directory \"/usr/local/apache2/htdocs\">\n    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted\n</Directory>\n\nDirectoryIndex index.html index.php\n\nAddType application/x-httpd-php .php\n"
+          }
+        },
+        "etc": {
+          "nginx": {
+            "nginx.conf": "user nginx;\nworker_processes auto;\nworker_rlimit_nofile 65535;\n\nevents {\n    worker_connections 65535;\n    multi_accept on;\n}\n\nhttp {\n    include /usr/local/etc/nginx/mime.types;\n    default_type application/octet-stream;\n\n    access_log /var/log/nginx/access.log;\n    error_log /var/log/nginx/error.log;\n\n    server {\n        listen 80;\n        server_name localhost;\n\n        location / {\n            root /usr/local/www/nginx-dist;\n            index index.html index.htm;\n        }\n    }\n}"
+          }
+        }
       }
     },
-    "scripts": {
-      "setup.sh": "#!/bin/bash\n# Server setup script\n\n# Update system\napt-get update && apt-get upgrade -y\n\n# Install necessary packages\napt-get install -y apache2 php mysql-server fail2ban ufw\n\n# Configure firewall\nufw allow ssh\nufw allow http\nufw allow https\nufw enable\n\n# Enable services\nsystemctl enable apache2\nsystemctl enable mysql\nsystemctl enable fail2ban"
-    }
-  },
-  "dev": {
-    "null": "Special file that discards all data written to it",
-    "zero": "Special file that provides null characters",
-    "random": "Special file that provides random data",
-    "shm": {
-      "session_temp": "Temporary session data in shared memory"
+    "tmp": {
+      "user-uploads": {
+        "test.php": "<?php\n// Test upload file\necho \"Hello World!\";\n?>",
+        "data.csv": "id,name,email\n1,John Doe,john@example.com\n2,Jane Smith,jane@example.com\n3,Bob Johnson,bob@example.com"
+      },
+      "sess_bd76hrjqp3tskeq0lad4tpb9f7": "user_id|s:1:\"5\";username|s:5:\"admin\";logged_in|b:1;"
+    },
+    "opt": {
+      "backup": {
+        "scripts": {
+          "backup-db.sh": "#!/bin/bash\n# Backup database\nDB_USER=\"backup\"\nDB_PASS=\"backupuser123\"\nBACKUP_DIR=\"/opt/backup/mysql\"\nDATE=$(date +%Y-%m-%d)\n\nmkdir -p $BACKUP_DIR\n\nmysqldump --all-databases -u $DB_USER -p$DB_PASS > $BACKUP_DIR/all-databases-$DATE.sql"
+        }
+      },
+      "scripts": {
+        "setup.sh": "#!/bin/bash\n# Server setup script\n\n# Update system\napt-get update && apt-get upgrade -y\n\n# Install necessary packages\napt-get install -y apache2 php mysql-server fail2ban ufw\n\n# Configure firewall\nufw allow ssh\nufw allow http\nufw allow https\nufw enable\n\n# Enable services\nsystemctl enable apache2\nsystemctl enable mysql\nsystemctl enable fail2ban"
+      }
+    },
+    "dev": {
+      "null": "Special file that discards all data written to it",
+      "zero": "Special file that provides null characters",
+      "random": "Special file that provides random data",
+      "shm": {
+        "session_temp": "Temporary session data in shared memory"
+      }
     }
   }
-}
