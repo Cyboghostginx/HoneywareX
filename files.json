@@ -1,76 +1,226 @@
 {
+  "bin": {
+    "bash": "Binary for the Bash shell.",
+    "ls": "Binary for listing directory contents.",
+    "cat": "Binary for concatenating and displaying file content.",
+    "mkdir": "Binary for creating directories.",
+    "rm": "Binary for removing files or directories.",
+    "cp": "Binary for copying files.",
+    "mv": "Binary for moving files.",
+    "grep": "Binary for pattern searching.",
+    "chmod": "Binary for changing file permissions.",
+    "chown": "Binary for changing file ownership.",
+    "ps": "Binary for displaying process status.",
+    "kill": "Binary for terminating processes.",
+    "wget": "Binary for downloading files from the web.",
+    "curl": "Binary for transferring data with URLs.",
+    "find": "Binary for finding files.",
+    "nano": "Simple text editor.",
+    "vim": "Vi improved text editor."
+  },
+  "boot": {
+    "vmlinuz-5.15.0-76-generic": "Linux kernel image.",
+    "initrd.img-5.15.0-76-generic": "Initial RAM disk for booting.",
+    "vmlinuz-5.15.0-75-generic": "Previous Linux kernel image.",
+    "initrd.img-5.15.0-75-generic": "Previous initial RAM disk.",
+    "grub": {
+      "grub.cfg": "# GRUB configuration file\nDEFAULT_TIMEOUT=5\nDEFAULT_ENTRY=\"Ubuntu, with Linux 5.15.0-76-generic\"\n\nmenuentry \"Ubuntu, with Linux 5.15.0-76-generic\" {\n linux /boot/vmlinuz-5.15.0-76-generic root=UUID=aad9e307-0628-4c7f-b546-a62f8b4b645e ro quiet splash\n initrd /boot/initrd.img-5.15.0-76-generic\n}",
+      "themes": {
+        "ubuntu": {
+          "theme.txt": "GRUB theme configuration."
+        }
+      }
+    }
+  },
+  "etc": {
+    "passwd": "root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\nsys:x:3:3:sys:/dev:/usr/sbin/nologin\nhaskoli:x:1000:1000:Honeypot User:/home/haskoli:/bin/bash\nuser1:x:1001:1001:Regular User:/home/user1:/bin/bash",
+    "group": "root:x:0:\ndaemon:x:1:\nbin:x:2:\nsys:x:3:\nadm:x:4:haskoli\nsudo:x:27:haskoli\nusers:x:100:\nhaskoli:x:1000:\nuser1:x:1001:",
+    "hostname": "server01",
+    "hosts": "127.0.0.1 localhost\n127.0.1.1 server01\n\n# The following lines are desirable for IPv6 capable hosts\n::1     ip6-localhost ip6-loopback\nfe00::0 ip6-localnet",
+    "issue": "Ubuntu 24.04.1 LTS \\n \\l",
+    "motd": "Welcome to Ubuntu 24.04.1 LTS (GNU/Linux 6.8.0-54-generic x86_64)\n\n * Documentation:  https://help.ubuntu.com\n * Management:     https://landscape.canonical.com\n * Support:        https://ubuntu.com/advantage",
+    "fstab": "UUID=aad9e307-0628-4c7f-b546-a62f8b4b645e / ext4 defaults 0 1\nUUID=b9ad4b58-9788-4e29-841d-a0d464af31e2 none swap sw 0 0\n/dev/sr0 /media/cdrom0 udf,iso9660 user,noauto 0 0",
+    "exports": "# /etc/exports: the access control list for filesystems which may be exported\n# to NFS clients.  See exports(5).\n#\n# Example for NFSv2 and NFSv3:\n# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)\n#\n# Example for NFSv4:\n# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)\n# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)",
+    "bash.bashrc": "# System-wide .bashrc file for interactive bash(1) shells.\n\n# If not running interactively, don't do anything\n[ -z \"$PS1\" ] && return\n\n# don't put duplicate lines in the history\nexport HISTCONTROL=ignoredups\n\n# check the window size after each command and, if necessary,\n# update the values of LINES and COLUMNS.\nshopt -s checkwinsize\n\n# make less more friendly for non-text input files\n[ -x /usr/bin/lesspipe ] && eval \"$(SHELL=/bin/sh lesspipe)\"\n\n# enable color support of ls\nif [ -x /usr/bin/dircolors ]; then\n    eval \"$(dircolors -b)\"\n    alias ls='ls --color=auto'\n    alias dir='dir --color=auto'\n    alias vdir='vdir --color=auto'\n    alias grep='grep --color=auto'\n    alias fgrep='fgrep --color=auto'\n    alias egrep='egrep --color=auto'\nfi",
+    "profile": "# /etc/profile: system-wide .profile file for the Bourne shell (sh(1))\n# and Bourne compatible shells (bash(1), ksh(1), ash(1), ...).\n\nif [ \"${PS1-}\" ]; then\n  if [ \"${BASH-}\" ] && [ \"$BASH\" != \"/bin/sh\" ]; then\n    # The file bash.bashrc already sets the default PS1.\n    # PS1='\\h:\\w\\$ '\n    if [ -f /etc/bash.bashrc ]; then\n      . /etc/bash.bashrc\n    fi\n  else\n    if [ \"`id -u`\" -eq 0 ]; then\n      PS1='# '\n    else\n      PS1='$ '\n    fi\n  fi\nfi\n\nif [ -d /etc/profile.d ]; then\n  for i in /etc/profile.d/*.sh; do\n    if [ -r $i ]; then\n      . $i\n    fi\n  done\n  unset i\nfi",
+    "profile.d": {
+      "bash_completion.sh": "# Check for interactive bash and that we haven't already been sourced.\n[ -z \"$BASH_VERSION\" -o -z \"$PS1\" -o -n \"$BASH_COMPLETION_DONE\" ] && return\n\n# Check for recent enough version of bash.\nbash=${BASH_VERSION%.*}; bmajor=${bash%.*}; bminor=${bash#*.}\nif [ $bmajor -gt 4 ] || [ $bmajor -eq 4 -a $bminor -ge 1 ]; then\n    [ -r \"/etc/bash_completion\" ] && . /etc/bash_completion\nfi\nunset bash bmajor bminor"
+    },
+    "lsb-release": "DISTRIB_ID=Ubuntu\nDISTRIB_RELEASE=24.04\nDISTRIB_CODENAME=noble\nDISTRIB_DESCRIPTION=\"Ubuntu 24.04.1 LTS\"",
+    "ssh": {
+      "sshd_config": "# SSH daemon configuration\nPort 22\nPermitRootLogin no\nPasswordAuthentication yes\nX11Forwarding no\nUsePAM yes\nPrintMotd no\nAcceptEnv LANG LC_*\nSubsystem sftp /usr/lib/openssh/sftp-server",
+      "ssh_config": "# This is the ssh client system-wide configuration file.\n\nHost *\n    SendEnv LANG LC_*\n    HashKnownHosts yes\n    GSSAPIAuthentication yes"
+    },
+    "resolv.conf": "nameserver 8.8.8.8\nnameserver 8.8.4.4",
+    "sudoers": "# This file MUST be edited with the 'visudo' command as root.\n#\n# Please consider adding local content in /etc/sudoers.d/ instead of\n# directly modifying this file.\n#\nDefaults        env_reset\nDefaults        mail_badpass\nDefaults        secure_path=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\"\n\n# Host alias specification\n\n# User alias specification\n\n# Cmnd alias specification\n\n# User privilege specification\nroot    ALL=(ALL:ALL) ALL\n\n# Members of the admin group may gain root privileges\n%admin ALL=(ALL) ALL\n\n# Allow members of group sudo to execute any command\n%sudo   ALL=(ALL:ALL) ALL",
+    "sudoers.d": {
+      "usersgroup": "# Allow members of usersgroup to execute certain commands\n%usersgroup ALL=(ALL) NOPASSWD: /bin/systemctl restart apache2, /bin/systemctl status apache2"
+    },
+    "apache2": {
+      ".htpasswd": "admin:$apr1$zK3jQ9xT$h5i1ZFb8GKkl3ygp/B/KZ1",
+      "ports.conf": "# If you just change the port or add more ports here, you will likely also\n# have to change the VirtualHost statement in\n# /etc/apache2/sites-enabled/000-default.conf\n\nListen 80\n\n<IfModule ssl_module>\n\tListen 443\n</IfModule>\n\n<IfModule mod_gnutls.c>\n\tListen 443\n</IfModule>",
+      "sites-available": {
+        "000-default.conf": "<VirtualHost *:80>\n\tServerAdmin webmaster@localhost\n\tDocumentRoot /var/www/html\n\n\tErrorLog ${APACHE_LOG_DIR}/error.log\n\tCustomLog ${APACHE_LOG_DIR}/access.log combined\n</VirtualHost>",
+        "domain.conf": "<VirtualHost *:80>\n\tServerName domain.com\n\tServerAdmin admin@domain.com\n\tDocumentRoot /var/www/domain.com/public_html\n\n\tErrorLog ${APACHE_LOG_DIR}/domain.com_error.log\n\tCustomLog ${APACHE_LOG_DIR}/domain.com_access.log combined\n</VirtualHost>"
+      },
+      "sites-enabled": {
+        "000-default.conf": "<VirtualHost *:80>\n\tServerAdmin webmaster@localhost\n\tDocumentRoot /var/www/html\n\n\tErrorLog ${APACHE_LOG_DIR}/error.log\n\tCustomLog ${APACHE_LOG_DIR}/access.log combined\n</VirtualHost>"
+      }
+    },
+    "nginx": {
+      "nginx.conf": "user www-data;\nworker_processes auto;\npid /run/nginx.pid;\ninclude /etc/nginx/modules-enabled/*.conf;\n\nevents {\n\tworker_connections 768;\n}\n\nhttp {\n\taccess_log /var/log/nginx/access.log;\n\terror_log /var/log/nginx/error.log;\n\n\tinclude /etc/nginx/conf.d/*.conf;\n\tinclude /etc/nginx/sites-enabled/*;\n}",
+      "conf.d": {
+        ".htpasswd": "admin:$apr1$zK3jQ9xT$h5i1ZFb8GKkl3ygp/B/KZ1"
+      },
+      "sites-available": {
+        "example.com.conf": "server {\n\tlisten 80;\n\tserver_name example.com www.example.com;\n\troot /var/www/example.com;\n\tindex index.html index.php;\n\n\taccess_log /var/log/nginx/example.com_access.log;\n\terror_log /var/log/nginx/example.com_error.log;\n\n\tlocation / {\n\t\ttry_files \\$uri \\$uri/ =404;\n\t}\n\n\tlocation ~ \\.php\\$ {\n\t\tinclude snippets/fastcgi-php.conf;\n\t\tfastcgi_pass unix:/var/run/php/php7.4-fpm.sock;\n\t}\n}"
+      },
+      "sites-enabled": {
+        "example.com.conf": "server {\n\tlisten 80;\n\tserver_name example.com www.example.com;\n\troot /var/www/example.com;\n\tindex index.html index.php;\n\n\taccess_log /var/log/nginx/example.com_access.log;\n\terror_log /var/log/nginx/example.com_error.log;\n\n\tlocation / {\n\t\ttry_files \\$uri \\$uri/ =404;\n\t}\n\n\tlocation ~ \\.php\\$ {\n\t\tinclude snippets/fastcgi-php.conf;\n\t\tfastcgi_pass unix:/var/run/php/php7.4-fpm.sock;\n\t}\n}"
+      }
+    },
+    "php": {
+      "7.4": {
+        "apache2": {
+          "php.ini": "; PHP Configuration for Apache2\n\nmax_execution_time = 30\nmax_input_time = 60\nmemory_limit = 128M\ndisplay_errors = Off\nlog_errors = On\nerror_log = /var/log/php7.4-apache.log\npost_max_size = 8M\nupload_max_filesize = 2M\nallow_url_fopen = On\nallow_url_include = Off\nsession.save_path = \"/var/lib/php/sessions\""
+        },
+        "cli": {
+          "php.ini": "; PHP Configuration for CLI\n\nmax_execution_time = 0\nmemory_limit = -1\ndisplay_errors = On\nlog_errors = On\nerror_log = /var/log/php7.4-cli.log\npost_max_size = 8M\nupload_max_filesize = 2M\nallow_url_fopen = On\nallow_url_include = Off\nsession.save_path = \"/var/lib/php/sessions\""
+        },
+        "fpm": {
+          "php.ini": "; PHP Configuration for FPM\n\nmax_execution_time = 30\nmax_input_time = 60\nmemory_limit = 128M\ndisplay_errors = Off\nlog_errors = On\nerror_log = /var/log/php7.4-fpm.log\npost_max_size = 8M\nupload_max_filesize = 2M\nallow_url_fopen = On\nallow_url_include = Off\nsession.save_path = \"/var/lib/php/sessions\""
+        }
+      }
+    },
+    "crontab": "# /etc/crontab: system-wide crontab\n# Unlike any other crontab you don't have to run the `crontab'\n# command to install the new version when you edit this file\n# and files in /etc/cron.d. These files also have username fields,\n# that none of the other crontabs do.\n\nSHELL=/bin/sh\nPATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n\n# Example of job definition:\n# .---------------- minute (0 - 59)\n# |  .------------- hour (0 - 23)\n# |  |  .---------- day of month (1 - 31)\n# |  |  |  .------- month (1 - 12) OR jan,feb,mar,etc.\n# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,etc.\n# |  |  |  |  |\n# *  *  *  *  * user-name command to be executed\n17 *    * * *   root    cd / && run-parts --report /etc/cron.hourly\n25 6    * * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )\n47 6    * * 7   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )\n52 6    1 * *   root    test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )\n",
+    "cron.d": {
+      "backup": "# Regular backup jobs\n0 2 * * * root /usr/local/bin/backup-script.sh >/dev/null 2>&1"
+    },
+    "cron.daily": {
+      "apt-upgrade": "#!/bin/sh\napt-get update && apt-get -y upgrade > /var/log/apt-daily.log 2>&1"
+    },
+    "cron.hourly": {
+      "temp-cleanup": "#!/bin/sh\nfind /tmp -type f -mtime +1 -delete > /dev/null 2>&1"
+    },
+    "mysql": {
+      "my.cnf": "[client]\nport = 3306\nsocket = /var/run/mysqld/mysqld.sock\n\n[mysqld]\nport = 3306\nsocket = /var/run/mysqld/mysqld.sock\nbasedir = /usr\ndatadir = /var/lib/mysql\ntmpdir = /tmp\nbind-address = 127.0.0.1\nmysqlx-bind-address = 127.0.0.1\n\n[mysql]\nno-auto-rehash",
+      "debian.cnf": "# Automatically generated for Debian scripts\n[client]\nhost = localhost\nuser = debian-sys-maint\npassword = uiZ3xMcSsEg5xZFA\nsocket = /var/run/mysqld/mysqld.sock\n[mysql_upgrade]\nhost = localhost\nuser = debian-sys-maint\npassword = uiZ3xMcSsEg5xZFA\nsocket = /var/run/mysqld/mysqld.sock",
+      "mariadb.cnf": "[client-mariadb]\nport = 3306\nsocket = /var/run/mysqld/mysqld.sock",
+      "conf.d": {
+        "mysql.cnf": "[mysql]\n\n[mysql_upgrade]\nbasedir = /usr"
+      },
+      "mysql.conf.d": {
+        "mysql.cnf": "[mysql]\n\n[mysql_upgrade]"
+      }
+    },
+    "pam.d": {
+      "common-auth": "# /etc/pam.d/common-auth - authentication settings common to all services\n\nauth    [success=1 default=ignore]      pam_unix.so nullok_secure\nauth    requisite                       pam_deny.so\nauth    required                        pam_permit.so",
+      "passwd": "# The PAM configuration file for the Shadow password suite\n\n@include common-password",
+      "sshd": "# PAM configuration for the Secure Shell service\n\n@include common-auth\n@include common-account\n@include common-session\n@include common-password"
+    }
+  },
+  "home": {
+    "haskoli": {
+      ".bashrc": "# ~/.bashrc: executed by bash for non-login shells\n# see /usr/share/doc/bash/examples/startup-files for examples\n\nalias ls='ls --color=auto'\nalias ll='ls -la'\nalias grep='grep --color=auto'\n\n# If not running interactively, don't do anything\ncase $- in\n    *i*) ;;\n      *) return;;\nesac\n\n# don't put duplicate lines or lines starting with space in the history\nHISTCONTROL=ignoreboth\n\n# append to the history file, don't overwrite it\nshopt -s histappend\n\n# for setting history length\nHISTSIZE=1000\nHISTFILESIZE=2000",
+      ".bash_history": "ls -la\ncd /var/www/html\ncat /etc/passwd\nsudo systemctl restart apache2\ntail -f /var/log/apache2/access.log\ngrep -r \"password\" /var/www\nnetstat -tuln\nps aux | grep apache\nwhoami\nsudo apt update\nsudo apt install vim\nscp backup.tar.gz user@192.168.1.10:/tmp/\ncurl -s https://example.com/api/check -H \"X-Api-Key: s3cr3t_k3y_h3r3\"",
+      ".bash_logout": "# ~/.bash_logout: executed by bash(1) when login shell exits.\n\n# when leaving the console clear the screen to increase privacy\nif [ \"$SHLVL\" = 1 ]; then\n    [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q\nfi",
+      ".bash_profile": "# ~/.bash_profile: executed by the command interpreter for login shells.\n# This file is not read by bash(1), if ~/.bash_login or ~/.profile exists.\n\n# include .bashrc if it exists\nif [ -f \"$HOME/.bashrc\" ]; then\n    . \"$HOME/.bashrc\"\nfi",
+      ".profile": "# ~/.profile: executed by the command interpreter for login shells.\n# This file is not read by bash(1), if ~/.bash_login or ~/.profile exists.\n\n# if running bash\nif [ -n \"$BASH_VERSION\" ]; then\n    # include .bashrc if it exists\n    if [ -f \"$HOME/.bashrc\" ]; then\n\t. \"$HOME/.bashrc\"\n    fi\nfi\n\n# set PATH so it includes user's private bin if it exists\nif [ -d \"$HOME/bin\" ] ; then\n    PATH=\"$HOME/bin:$PATH\"\nfi\n\n# set PATH so it includes user's private bin if it exists\nif [ -d \"$HOME/.local/bin\" ] ; then\n    PATH=\"$HOME/.local/bin:$PATH\"\nfi",
+      ".config": {
+        "xpad": {
+          "content-001": "Server credentials:\ndb_user: app_user\ndb_pass: D3vS3rver#123\nAdmin portal: https://admin.example.com\nuser: admin@example.com\npass: Super$ecure2023"
+        }
+      },
+      "readme.txt": "Welcome to the server!\n\nThis machine is used for development and testing purposes.\nPlease do not make changes without consulting the admin team."
+    }
+  },
+  "root": {
+    ".bashrc": "# ~/.bashrc: executed by bash for non-login shells\n\n# If not running interactively, don't do anything\n[ -z \"$PS1\" ] && return\n\n# don't put duplicate lines in the history\nHISTCONTROL=ignoredups\n\n# check the window size after each command\nshopt -s checkwinsize\n\n# make less more friendly for non-text input files\n[ -x /usr/bin/lesspipe ] && eval \"$(SHELL=/bin/sh lesspipe)\"\n\n# enable color prompt\nPS1='\\[\\033[01;31m\\]\\u@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '\n\n# enable color support of ls\nalias ls='ls --color=auto'\nalias grep='grep --color=auto'",
+    ".bash_history": "systemctl status mysql\nnetstat -tuln\nless /var/log/auth.log\ntail -f /var/log/syslog\nufw status\nufw allow 80/tcp\nufw allow 443/tcp\napt update && apt upgrade -y\nusermod -aG sudo haskoli\nchmod 600 /etc/ssh/ssh_host_*_key\nchown -R www-data:www-data /var/www/html\nmysql -u root -p\nmysqldump --all-databases > /root/backups/db_backup_$(date +%Y%m%d).sql",
+    ".bash_logout": "# ~/.bash_logout: executed by bash(1) when login shell exits.\n\n# when leaving the console clear the screen to increase privacy\nif [ \"$SHLVL\" = 1 ]; then\n    [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q\nfi",
+    ".bash_profile": "# ~/.bash_profile: executed by bash(1) for login shells.\n\n# include .bashrc if it exists\nif [ -f ~/.bashrc ]; then\n  . ~/.bashrc\nfi",
+    ".profile": "# ~/.profile: executed by Bourne-compatible login shells.\n\nif [ \"$BASH\" ]; then\n  if [ -f ~/.bashrc ]; then\n    . ~/.bashrc\n  fi\nfi\n\nmesg n 2> /dev/null || true"
+  },
+  "var": {
+    "log": {
+      "nginx": {
+        "access.log": "192.168.1.100 - - [27/Feb/2024:10:23:45 +0000] \"GET / HTTP/1.1\" 200 615 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36\"\n192.168.1.100 - - [27/Feb/2024:10:23:47 +0000] \"GET /favicon.ico HTTP/1.1\" 404 153 \"http://example.com/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36\"\n203.0.113.45 - - [27/Feb/2024:15:48:12 +0000] \"POST /api/login HTTP/1.1\" 200 245 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15\"\n203.0.113.45 - - [27/Feb/2024:15:48:15 +0000] \"GET /api/users HTTP/1.1\" 200 2543 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15\"",
+        "error.log": "2024/02/27 10:20:34 [notice] 1234#1234: using the \"epoll\" event method\n2024/02/27 10:20:34 [notice] 1234#1234: nginx/1.18.0\n2024/02/27 10:20:34 [notice] 1234#1234: built by gcc 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)\n2024/02/27 10:20:34 [notice] 1234#1234: OS: Linux 5.15.0-76-generic\n2024/02/27 15:42:17 [error] 5678#5678: *123 FastCGI sent in stderr: \"PHP message: PHP Warning:  include(config.php): failed to open stream: No such file or directory in /var/www/example.com/index.php on line 3\" while reading response header from upstream, client: 203.0.113.45, server: example.com, request: \"GET / HTTP/1.1\", upstream: \"fastcgi://unix:/var/run/php/php7.4-fpm.sock:\", host: \"example.com\""
+      },
+      "mysql": {
+        "error.log": "2024-02-27T10:12:34.123456Z 0 [Note] mysqld: ready for connections.\n2024-02-27T14:22:17.654321Z 56 [Warning] Access denied for user 'webapp'@'localhost' (using password: YES)\n2024-02-27T16:45:22.789012Z 0 [Note] InnoDB: page_cleaner: 1000ms intended loop took 3426ms. The settings might not be optimal."
+      },
+      "mail.log": "Feb 27 08:12:34 server01 postfix/smtpd[1234]: connect from localhost[127.0.0.1]\nFeb 27 08:12:35 server01 postfix/smtpd[1234]: 9B8765432: client=localhost[127.0.0.1]\nFeb 27 08:12:36 server01 postfix/cleanup[2345]: 9B8765432: message-id=<20240227081236.9B8765432@server01.example.com>\nFeb 27 08:12:37 server01 postfix/qmgr[3456]: 9B8765432: from=<root@server01.example.com>, size=654, nrcpt=1 (queue active)\nFeb 27 08:12:38 server01 postfix/smtp[4567]: 9B8765432: to=<admin@example.com>, relay=mail.example.com[203.0.113.10]:25, delay=3.6, delays=0.08/0.01/1.5/2.1, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 8D7F43A61)",
+      "cron": "Feb 27 00:00:01 server01 CRON[1234]: (root) CMD (cd / && run-parts --report /etc/cron.daily)\nFeb 27 01:00:01 server01 CRON[2345]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)\nFeb 27 02:00:01 server01 CRON[3456]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)\nFeb 27 03:00:01 server01 CRON[4567]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)",
+      "fail2ban.log": "2024-02-27 03:12:19 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:19\n2024-02-27 03:12:25 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:25\n2024-02-27 03:12:33 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:33\n2024-02-27 03:12:34 fail2ban.actions        [1234]: NOTICE  [sshd] Ban 103.25.85.142\n2024-02-28 03:12:34 fail2ban.actions        [1234]: NOTICE  [sshd] Unban 103.25.85.142",
+      "bash.log": "2024-02-27 09:15:45|haskoli|tty1|cd /var/www/html\n2024-02-27 09:16:12|haskoli|tty1|ls -la\n2024-02-27 09:17:33|haskoli|tty1|cat index.php\n2024-02-27 09:18:05|root|tty2|systemctl status apache2"
+    },
+    "spool": {
+      "cron": {
+        "crontabs": {
+          "root": "# DO NOT EDIT THIS FILE - edit the master and reinstall.\n# (/tmp/crontab.XXXXJBHAQp installed on Wed Feb 17 14:22:12 2024)\n# (Cron version -- $Id: crontab.c,v 2.13 1994/01/17 03:20:37 vixie Exp $)\n0 2 * * * /usr/local/bin/backup.sh > /dev/null 2>&1\n15 4 * * * /opt/scripts/system-maintenance.sh > /dev/null 2>&1",
+          "haskoli": "# DO NOT EDIT THIS FILE - edit the master and reinstall.\n# (/tmp/crontab.XXXXqwerty installed on Wed Feb 24 16:45:37 2024)\n# (Cron version -- $Id: crontab.c,v 2.13 1994/01/17 03:20:37 vixie Exp $)\n30 * * * * /home/haskoli/scripts/check-updates.sh > /dev/null 2>&1"
+        }
+      },
+      "mail": {
+        "haskoli": "From: System Admin <root@server01.example.com>\nTo: haskoli@localhost\nSubject: System Update Notification\nDate: Tue, 27 Feb 2024 08:12:37 +0000\n\nThis is an automated message to inform you that system updates will be applied tonight at 02:00 UTC.\nThe server might be briefly unavailable during this maintenance window.\n\nRegards,\nSystem Administrator"
+      }
+    },
+    "www": {
+      "html": {
+        "index.html": "<html><head><title>Test Page</title></head><body><h1>It works!</h1></body></html>",
+        "phpinfo.php": "<?php\n// Show PHP information\nphpinfo();\n?>",
+        "db.php": "<?php\n// Database connection configuration\n$db_host = 'localhost';\n$db_user = 'webapp';\n$db_pass = 'webappdb123';\n$db_name = 'appdata';\n\n// Create connection\n$conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);\n\n// Check connection\nif (!$conn) {\n    die(\"Connection failed: \" . mysqli_connect_error());\n}\n?>"
+      }
+    }
+  },
+  "usr": {
     "bin": {
-      "bash": "Binary for the Bash shell.",
-      "ls": "Binary for listing directory contents.",
-      "cat": "Binary for concatenating and displaying file content.",
-      "mkdir": "Binary for creating directories.",
-      "rm": "Binary for removing files or directories.",
-      "cp": "Binary for copying files.",
-      "mv": "Binary for moving files.",
-      "grep": "Binary for pattern searching.",
-      "chmod": "Binary for changing file permissions.",
-      "chown": "Binary for changing file ownership.",
-      "ps": "Binary for displaying process status.",
-      "kill": "Binary for terminating processes.",
-      "wget": "Binary for downloading files from the web.",
-      "curl": "Binary for transferring data with URLs.",
-      "find": "Binary for finding files.",
-      "nano": "Simple text editor.",
-      "vim": "Vi improved text editor."
+      "python3": "Python 3 interpreter binary"
     },
-    "boot": {
-      "vmlinuz-5.15.0-76-generic": "Linux kernel image.",
-      "initrd.img-5.15.0-76-generic": "Initial RAM disk for booting.",
-      "vmlinuz-5.15.0-75-generic": "Previous Linux kernel image.",
-      "initrd.img-5.15.0-75-generic": "Previous initial RAM disk.",
-      "grub": {
-        "grub.cfg": "# GRUB configuration file\nDEFAULT_TIMEOUT=5\nDEFAULT_ENTRY=\"Ubuntu, with Linux 5.15.0-76-generic\"\n\nmenuentry \"Ubuntu, with Linux 5.15.0-76-generic\" {\n linux /boot/vmlinuz-5.15.0-76-generic root=UUID=aad9e307-0628-4c7f-b546-a62f8b4b645e ro quiet splash\n initrd /boot/initrd.img-5.15.0-76-generic\n}",
-        "themes": {
-          "ubuntu": {
-            "theme.txt": "GRUB theme configuration."
-          }
-        }
-      }
-    },
-    "etc": {
-      "passwd": "root:x:0:0:root:/root:/bin/bash\ndaemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\nbin:x:2:2:bin:/bin:/usr/sbin/nologin\nsys:x:3:3:sys:/dev:/usr/sbin/nologin\nhoneypot:x:1000:1000:Honeypot User:/home/honeypot:/bin/bash\nuser1:x:1001:1001:Regular User:/home/user1:/bin/bash",
-      "hostname": "server01",
-      "hosts": "127.0.0.1 localhost\n127.0.1.1 server01\n\n# The following lines are desirable for IPv6 capable hosts\n::1     ip6-localhost ip6-loopback\nfe00::0 ip6-localnet",
-      "ssh": {
-        "sshd_config": "# SSH daemon configuration\nPort 22\nPermitRootLogin no\nPasswordAuthentication yes\nX11Forwarding no"
-      },
-      "resolv.conf": "nameserver 8.8.8.8\nnameserver 8.8.4.4"
-    },
-    "home": {
-      "honeypot": {
-        ".bashrc": "# ~/.bashrc: executed by bash for non-login shells\n# see /usr/share/doc/bash/examples/startup-files for examples\n\nalias ls='ls --color=auto'\nalias ll='ls -la'\nalias grep='grep --color=auto'",
-        "readme.txt": "Welcome to the server!\n\nThis machine is used for development and testing purposes.\nPlease do not make changes without consulting the admin team."
-      }
-    },
-    "var": {
-      "log": {
-        "auth.log": "Feb 27 09:23:45 server01 sshd[1234]: Accepted password for honeypot from 192.168.1.10 port 49812 ssh2\nFeb 27 14:22:35 server01 sshd[1235]: Accepted password for honeypot from 192.168.1.15 port 51432 ssh2",
-        "syslog": "Feb 27 08:00:01 server01 systemd[1]: Started Daily apt upgrade and clean activities."
-      },
-      "www": {
-        "html": {
-          "index.html": "<html><head><title>Test Page</title></head><body><h1>It works!</h1></body></html>"
-        }
-      }
-    },
-    "usr": {
+    "local": {
       "bin": {
-        "python3": "Python 3 interpreter binary"
+        "backup.sh": "#!/bin/bash\n# Backup important data\n\nBACKUP_DIR=\"/var/backups/$(date +%Y-%m-%d)\"\nmkdir -p $BACKUP_DIR\n\n# Backup website files\ntar -czf $BACKUP_DIR/www-html.tar.gz /var/www/html\n\n# Backup database\nmysqldump --all-databases -u root -p'rootDBpass123' > $BACKUP_DIR/all-databases.sql\n\n# Set permissions\nchmod 600 $BACKUP_DIR/all-databases.sql\nchown root:root $BACKUP_DIR/*\n\n# Cleanup old backups (keep last 7 days)\nfind /var/backups/ -type d -mtime +7 -exec rm -rf {} \\; 2>/dev/null",
+        "system-maintenance.sh": "#!/bin/bash\n# System maintenance tasks\n\n# Update package lists\napt-get update > /dev/null\n\n# Check disk space\ndf -h / >> /var/log/disk-usage.log\n\n# Check system load\nuptime >> /var/log/system-load.log\n\n# Cleanup temp files\nfind /tmp -type f -mtime +3 -delete\n"
       },
-      "local": {
-        "bin": {}
+      "apache2": {
+        "htdocs": {
+          "index.html": "<html><head><title>Welcome to Apache</title></head><body><h1>It works!</h1><p>This is the default web page for this server.</p></body></html>"
+        },
+        "conf": {
+          "httpd.conf": "# Apache HTTP Server Configuration\nServerRoot \"/usr/local/apache2\"\nListen 8080\n\nLoadModule alias_module modules/mod_alias.so\nLoadModule auth_basic_module modules/mod_auth_basic.so\nLoadModule authn_file_module modules/mod_authn_file.so\nLoadModule authz_core_module modules/mod_authz_core.so\nLoadModule authz_host_module modules/mod_authz_host.so\nLoadModule authz_user_module modules/mod_authz_user.so\nLoadModule dir_module modules/mod_dir.so\nLoadModule mime_module modules/mod_mime.so\nLoadModule rewrite_module modules/mod_rewrite.so\nLoadModule php_module modules/libphp.so\n\nServerAdmin admin@example.com\nServerName example.com\n\nDocumentRoot \"/usr/local/apache2/htdocs\"\n\n<Directory \"/usr/local/apache2/htdocs\">\n    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted\n</Directory>\n\nDirectoryIndex index.html index.php\n\nAddType application/x-httpd-php .php\n"
+        }
+      },
+      "etc": {
+        "nginx": {
+          "nginx.conf": "user nginx;\nworker_processes auto;\nworker_rlimit_nofile 65535;\n\nevents {\n    worker_connections 65535;\n    multi_accept on;\n}\n\nhttp {\n    include /usr/local/etc/nginx/mime.types;\n    default_type application/octet-stream;\n\n    access_log /var/log/nginx/access.log;\n    error_log /var/log/nginx/error.log;\n\n    server {\n        listen 80;\n        server_name localhost;\n\n        location / {\n            root /usr/local/www/nginx-dist;\n            index index.html index.htm;\n        }\n    }\n}"
+        }
+      }
+    }
+  },
+  "tmp": {
+    "user-uploads": {
+      "test.php": "<?php\n// Test upload file\necho \"Hello World!\";\n?>",
+      "data.csv": "id,name,email\n1,John Doe,john@example.com\n2,Jane Smith,jane@example.com\n3,Bob Johnson,bob@example.com"
+    },
+    "sess_bd76hrjqp3tskeq0lad4tpb9f7": "user_id|s:1:\"5\";username|s:5:\"admin\";logged_in|b:1;"
+  },
+  "opt": {
+    "backup": {
+      "scripts": {
+        "backup-db.sh": "#!/bin/bash\n# Backup database\nDB_USER=\"backup\"\nDB_PASS=\"backupuser123\"\nBACKUP_DIR=\"/opt/backup/mysql\"\nDATE=$(date +%Y-%m-%d)\n\nmkdir -p $BACKUP_DIR\n\nmysqldump --all-databases -u $DB_USER -p$DB_PASS > $BACKUP_DIR/all-databases-$DATE.sql"
       }
     },
-    "tmp": {},
-    "opt": {},
-    "dev": {
-      "null": "Special file that discards all data written to it",
-      "zero": "Special file that provides null characters",
-      "random": "Special file that provides random data"
+    "scripts": {
+      "setup.sh": "#!/bin/bash\n# Server setup script\n\n# Update system\napt-get update && apt-get upgrade -y\n\n# Install necessary packages\napt-get install -y apache2 php mysql-server fail2ban ufw\n\n# Configure firewall\nufw allow ssh\nufw allow http\nufw allow https\nufw enable\n\n# Enable services\nsystemctl enable apache2\nsystemctl enable mysql\nsystemctl enable fail2ban"
+    }
+  },
+  "dev": {
+    "null": "Special file that discards all data written to it",
+    "zero": "Special file that provides null characters",
+    "random": "Special file that provides random data",
+    "shm": {
+      "session_temp": "Temporary session data in shared memory"
     }
   }
+}
