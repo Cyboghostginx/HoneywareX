@@ -182,95 +182,95 @@
         "contact.html": "<html>\n<head>\n  <title>Contact Me</title>\n  <style>\n    body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }\n    h1 { color: #333; }\n    .container { max-width: 800px; margin: 0 auto; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <h1>Contact Information</h1>\n    <p>Email: haskoli@example.com</p>\n    <p>GitHub: github.com/haskoli</p>\n    <p>LinkedIn: linkedin.com/in/haskoli</p>\n    <p><a href=\"/index.html\">Back to home</a></p>\n  </div>\n</body>\n</html>"
       },
       "readme.txt": "Welcome to the server!\n\nThis machine is used for development and testing purposes.\nPlease do not make changes without consulting the admin team.\n\nUseful commands:\n- sudo systemctl restart apache2 (restart web server)\n- tail -f /var/log/apache2/error.log (view web server errors)\n- mysql -u appuser -p (connect to database)\n\nFor any issues, contact: admin@example.com"
-    },
-    "root": {
-      ".bashrc": "# ~/.bashrc: executed by bash for non-login shells\n\n# If not running interactively, don't do anything\n[ -z \"$PS1\" ] && return\n\n# don't put duplicate lines in the history\nHISTCONTROL=ignoredups\n\n# check the window size after each command\nshopt -s checkwinsize\n\n# make less more friendly for non-text input files\n[ -x /usr/bin/lesspipe ] && eval \"$(SHELL=/bin/sh lesspipe)\"\n\n# enable color prompt\nPS1='\\[\\033[01;31m\\]\\u@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '\n\n# enable color support of ls\nalias ls='ls --color=auto'\nalias grep='grep --color=auto'",
-      ".bash_history": "systemctl status mysql\nnetstat -tuln\nless /var/log/auth.log\ntail -f /var/log/syslog\nufw status\nufw allow 80/tcp\nufw allow 443/tcp\napt update && apt upgrade -y\nusermod -aG sudo haskoli\nchmod 600 /etc/ssh/ssh_host_*_key\nchown -R www-data:www-data /var/www/html\nmysql -u root -p\nmysqldump --all-databases > /root/backups/db_backup_$(date +%Y%m%d).sql",
-      ".bash_logout": "# ~/.bash_logout: executed by bash(1) when login shell exits.\n\n# when leaving the console clear the screen to increase privacy\nif [ \"$SHLVL\" = 1 ]; then\n    [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q\nfi",
-      ".bash_profile": "# ~/.bash_profile: executed by bash(1) for login shells.\n\n# include .bashrc if it exists\nif [ -f ~/.bashrc ]; then\n  . ~/.bashrc\nfi",
-      ".profile": "# ~/.profile: executed by Bourne-compatible login shells.\n\nif [ \"$BASH\" ]; then\n  if [ -f ~/.bashrc ]; then\n    . ~/.bashrc\n  fi\nfi\n\nmesg n 2> /dev/null || true"
-    },
-    "var": {
-      "log": {
-        "nginx": {
-          "access.log": "192.168.1.100 - - [27/Feb/2024:10:23:45 +0000] \"GET / HTTP/1.1\" 200 615 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36\"\n192.168.1.100 - - [27/Feb/2024:10:23:47 +0000] \"GET /favicon.ico HTTP/1.1\" 404 153 \"http://example.com/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36\"\n203.0.113.45 - - [27/Feb/2024:15:48:12 +0000] \"POST /api/login HTTP/1.1\" 200 245 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15\"\n203.0.113.45 - - [27/Feb/2024:15:48:15 +0000] \"GET /api/users HTTP/1.1\" 200 2543 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15\"",
-          "error.log": "2024/02/27 10:20:34 [notice] 1234#1234: using the \"epoll\" event method\n2024/02/27 10:20:34 [notice] 1234#1234: nginx/1.18.0\n2024/02/27 10:20:34 [notice] 1234#1234: built by gcc 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)\n2024/02/27 10:20:34 [notice] 1234#1234: OS: Linux 5.15.0-76-generic\n2024/02/27 15:42:17 [error] 5678#5678: *123 FastCGI sent in stderr: \"PHP message: PHP Warning:  include(config.php): failed to open stream: No such file or directory in /var/www/example.com/index.php on line 3\" while reading response header from upstream, client: 203.0.113.45, server: example.com, request: \"GET / HTTP/1.1\", upstream: \"fastcgi://unix:/var/run/php/php7.4-fpm.sock:\", host: \"example.com\""
-        },
-        "mysql": {
-          "error.log": "2024-02-27T10:12:34.123456Z 0 [Note] mysqld: ready for connections.\n2024-02-27T14:22:17.654321Z 56 [Warning] Access denied for user 'webapp'@'localhost' (using password: YES)\n2024-02-27T16:45:22.789012Z 0 [Note] InnoDB: page_cleaner: 1000ms intended loop took 3426ms. The settings might not be optimal."
-        },
-        "mail.log": "Feb 27 08:12:34 server01 postfix/smtpd[1234]: connect from localhost[127.0.0.1]\nFeb 27 08:12:35 server01 postfix/smtpd[1234]: 9B8765432: client=localhost[127.0.0.1]\nFeb 27 08:12:36 server01 postfix/cleanup[2345]: 9B8765432: message-id=<20240227081236.9B8765432@server01.example.com>\nFeb 27 08:12:37 server01 postfix/qmgr[3456]: 9B8765432: from=<root@server01.example.com>, size=654, nrcpt=1 (queue active)\nFeb 27 08:12:38 server01 postfix/smtp[4567]: 9B8765432: to=<admin@example.com>, relay=mail.example.com[203.0.113.10]:25, delay=3.6, delays=0.08/0.01/1.5/2.1, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 8D7F43A61)",
-        "cron": "Feb 27 00:00:01 server01 CRON[1234]: (root) CMD (cd / && run-parts --report /etc/cron.daily)\nFeb 27 01:00:01 server01 CRON[2345]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)\nFeb 27 02:00:01 server01 CRON[3456]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)\nFeb 27 03:00:01 server01 CRON[4567]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)",
-        "fail2ban.log": "2024-02-27 03:12:19 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:19\n2024-02-27 03:12:25 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:25\n2024-02-27 03:12:33 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:33\n2024-02-27 03:12:34 fail2ban.actions        [1234]: NOTICE  [sshd] Ban 103.25.85.142\n2024-02-28 03:12:34 fail2ban.actions        [1234]: NOTICE  [sshd] Unban 103.25.85.142",
-        "bash.log": "2024-02-27 09:15:45|haskoli|tty1|cd /var/www/html\n2024-02-27 09:16:12|haskoli|tty1|ls -la\n2024-02-27 09:17:33|haskoli|tty1|cat index.php\n2024-02-27 09:18:05|root|tty2|systemctl status apache2"
+    }
+  },
+  "root": {
+    ".bashrc": "# ~/.bashrc: executed by bash for non-login shells\n\n# If not running interactively, don't do anything\n[ -z \"$PS1\" ] && return\n\n# don't put duplicate lines in the history\nHISTCONTROL=ignoredups\n\n# check the window size after each command\nshopt -s checkwinsize\n\n# make less more friendly for non-text input files\n[ -x /usr/bin/lesspipe ] && eval \"$(SHELL=/bin/sh lesspipe)\"\n\n# enable color prompt\nPS1='\\[\\033[01;31m\\]\\u@\\h\\[\\033[00m\\]:\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '\n\n# enable color support of ls\nalias ls='ls --color=auto'\nalias grep='grep --color=auto'",
+    ".bash_history": "systemctl status mysql\nnetstat -tuln\nless /var/log/auth.log\ntail -f /var/log/syslog\nufw status\nufw allow 80/tcp\nufw allow 443/tcp\napt update && apt upgrade -y\nusermod -aG sudo haskoli\nchmod 600 /etc/ssh/ssh_host_*_key\nchown -R www-data:www-data /var/www/html\nmysql -u root -p\nmysqldump --all-databases > /root/backups/db_backup_$(date +%Y%m%d).sql",
+    ".bash_logout": "# ~/.bash_logout: executed by bash(1) when login shell exits.\n\n# when leaving the console clear the screen to increase privacy\nif [ \"$SHLVL\" = 1 ]; then\n    [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q\nfi",
+    ".bash_profile": "# ~/.bash_profile: executed by bash(1) for login shells.\n\n# include .bashrc if it exists\nif [ -f ~/.bashrc ]; then\n  . ~/.bashrc\nfi",
+    ".profile": "# ~/.profile: executed by Bourne-compatible login shells.\n\nif [ \"$BASH\" ]; then\n  if [ -f ~/.bashrc ]; then\n    . ~/.bashrc\n  fi\nfi\n\nmesg n 2> /dev/null || true"
+  },
+  "var": {
+    "log": {
+      "nginx": {
+        "access.log": "192.168.1.100 - - [27/Feb/2024:10:23:45 +0000] \"GET / HTTP/1.1\" 200 615 \"-\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36\"\n192.168.1.100 - - [27/Feb/2024:10:23:47 +0000] \"GET /favicon.ico HTTP/1.1\" 404 153 \"http://example.com/\" \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36\"\n203.0.113.45 - - [27/Feb/2024:15:48:12 +0000] \"POST /api/login HTTP/1.1\" 200 245 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15\"\n203.0.113.45 - - [27/Feb/2024:15:48:15 +0000] \"GET /api/users HTTP/1.1\" 200 2543 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.4 Safari/605.1.15\"",
+        "error.log": "2024/02/27 10:20:34 [notice] 1234#1234: using the \"epoll\" event method\n2024/02/27 10:20:34 [notice] 1234#1234: nginx/1.18.0\n2024/02/27 10:20:34 [notice] 1234#1234: built by gcc 9.3.0 (Ubuntu 9.3.0-17ubuntu1~20.04)\n2024/02/27 10:20:34 [notice] 1234#1234: OS: Linux 5.15.0-76-generic\n2024/02/27 15:42:17 [error] 5678#5678: *123 FastCGI sent in stderr: \"PHP message: PHP Warning:  include(config.php): failed to open stream: No such file or directory in /var/www/example.com/index.php on line 3\" while reading response header from upstream, client: 203.0.113.45, server: example.com, request: \"GET / HTTP/1.1\", upstream: \"fastcgi://unix:/var/run/php/php7.4-fpm.sock:\", host: \"example.com\""
       },
-      "spool": {
-        "cron": {
-          "crontabs": {
-            "root": "# DO NOT EDIT THIS FILE - edit the master and reinstall.\n# (/tmp/crontab.XXXXJBHAQp installed on Wed Feb 17 14:22:12 2024)\n# (Cron version -- $Id: crontab.c,v 2.13 1994/01/17 03:20:37 vixie Exp $)\n0 2 * * * /usr/local/bin/backup.sh > /dev/null 2>&1\n15 4 * * * /opt/scripts/system-maintenance.sh > /dev/null 2>&1",
-            "haskoli": "# DO NOT EDIT THIS FILE - edit the master and reinstall.\n# (/tmp/crontab.XXXXqwerty installed on Wed Feb 24 16:45:37 2024)\n# (Cron version -- $Id: crontab.c,v 2.13 1994/01/17 03:20:37 vixie Exp $)\n30 * * * * /home/haskoli/scripts/check-updates.sh > /dev/null 2>&1"
-          }
-        },
-        "mail": {
-          "haskoli": "From: System Admin <root@server01.example.com>\nTo: haskoli@localhost\nSubject: System Update Notification\nDate: Tue, 27 Feb 2024 08:12:37 +0000\n\nThis is an automated message to inform you that system updates will be applied tonight at 02:00 UTC.\nThe server might be briefly unavailable during this maintenance window.\n\nRegards,\nSystem Administrator"
+      "mysql": {
+        "error.log": "2024-02-27T10:12:34.123456Z 0 [Note] mysqld: ready for connections.\n2024-02-27T14:22:17.654321Z 56 [Warning] Access denied for user 'webapp'@'localhost' (using password: YES)\n2024-02-27T16:45:22.789012Z 0 [Note] InnoDB: page_cleaner: 1000ms intended loop took 3426ms. The settings might not be optimal."
+      },
+      "mail.log": "Feb 27 08:12:34 server01 postfix/smtpd[1234]: connect from localhost[127.0.0.1]\nFeb 27 08:12:35 server01 postfix/smtpd[1234]: 9B8765432: client=localhost[127.0.0.1]\nFeb 27 08:12:36 server01 postfix/cleanup[2345]: 9B8765432: message-id=<20240227081236.9B8765432@server01.example.com>\nFeb 27 08:12:37 server01 postfix/qmgr[3456]: 9B8765432: from=<root@server01.example.com>, size=654, nrcpt=1 (queue active)\nFeb 27 08:12:38 server01 postfix/smtp[4567]: 9B8765432: to=<admin@example.com>, relay=mail.example.com[203.0.113.10]:25, delay=3.6, delays=0.08/0.01/1.5/2.1, dsn=2.0.0, status=sent (250 2.0.0 Ok: queued as 8D7F43A61)",
+      "cron": "Feb 27 00:00:01 server01 CRON[1234]: (root) CMD (cd / && run-parts --report /etc/cron.daily)\nFeb 27 01:00:01 server01 CRON[2345]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)\nFeb 27 02:00:01 server01 CRON[3456]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)\nFeb 27 03:00:01 server01 CRON[4567]: (root) CMD (cd / && run-parts --report /etc/cron.hourly)",
+      "fail2ban.log": "2024-02-27 03:12:19 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:19\n2024-02-27 03:12:25 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:25\n2024-02-27 03:12:33 fail2ban.filter         [1234]: INFO    [sshd] Found 103.25.85.142 - 2024-02-27 03:12:33\n2024-02-27 03:12:34 fail2ban.actions        [1234]: NOTICE  [sshd] Ban 103.25.85.142\n2024-02-28 03:12:34 fail2ban.actions        [1234]: NOTICE  [sshd] Unban 103.25.85.142",
+      "bash.log": "2024-02-27 09:15:45|haskoli|tty1|cd /var/www/html\n2024-02-27 09:16:12|haskoli|tty1|ls -la\n2024-02-27 09:17:33|haskoli|tty1|cat index.php\n2024-02-27 09:18:05|root|tty2|systemctl status apache2"
+    },
+    "spool": {
+      "cron": {
+        "crontabs": {
+          "root": "# DO NOT EDIT THIS FILE - edit the master and reinstall.\n# (/tmp/crontab.XXXXJBHAQp installed on Wed Feb 17 14:22:12 2024)\n# (Cron version -- $Id: crontab.c,v 2.13 1994/01/17 03:20:37 vixie Exp $)\n0 2 * * * /usr/local/bin/backup.sh > /dev/null 2>&1\n15 4 * * * /opt/scripts/system-maintenance.sh > /dev/null 2>&1",
+          "haskoli": "# DO NOT EDIT THIS FILE - edit the master and reinstall.\n# (/tmp/crontab.XXXXqwerty installed on Wed Feb 24 16:45:37 2024)\n# (Cron version -- $Id: crontab.c,v 2.13 1994/01/17 03:20:37 vixie Exp $)\n30 * * * * /home/haskoli/scripts/check-updates.sh > /dev/null 2>&1"
         }
       },
-      "www": {
-        "html": {
-          "index.html": "<html><head><title>Test Page</title></head><body><h1>It works!</h1></body></html>",
-          "phpinfo.php": "<?php\n// Show PHP information\nphpinfo();\n?>",
-          "db.php": "<?php\n// Database connection configuration\n$db_host = 'localhost';\n$db_user = 'webapp';\n$db_pass = 'webappdb123';\n$db_name = 'appdata';\n\n// Create connection\n$conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);\n\n// Check connection\nif (!$conn) {\n    die(\"Connection failed: \" . mysqli_connect_error());\n}\n?>"
-        }
+      "mail": {
+        "haskoli": "From: System Admin <root@server01.example.com>\nTo: haskoli@localhost\nSubject: System Update Notification\nDate: Tue, 27 Feb 2024 08:12:37 +0000\n\nThis is an automated message to inform you that system updates will be applied tonight at 02:00 UTC.\nThe server might be briefly unavailable during this maintenance window.\n\nRegards,\nSystem Administrator"
       }
     },
-    "usr": {
+    "www": {
+      "html": {
+        "index.html": "<html><head><title>Test Page</title></head><body><h1>It works!</h1></body></html>",
+        "phpinfo.php": "<?php\n// Show PHP information\nphpinfo();\n?>",
+        "db.php": "<?php\n// Database connection configuration\n$db_host = 'localhost';\n$db_user = 'webapp';\n$db_pass = 'webappdb123';\n$db_name = 'appdata';\n\n// Create connection\n$conn = mysqli_connect($db_host, $db_user, $db_pass, $db_name);\n\n// Check connection\nif (!$conn) {\n    die(\"Connection failed: \" . mysqli_connect_error());\n}\n?>"
+      }
+    }
+  },
+  "usr": {
+    "bin": {
+      "python3": "Python 3 interpreter binary"
+    },
+    "local": {
       "bin": {
-        "python3": "Python 3 interpreter binary"
+        "backup.sh": "#!/bin/bash\n# Backup important data\n\nBACKUP_DIR=\"/var/backups/$(date +%Y-%m-%d)\"\nmkdir -p $BACKUP_DIR\n\n# Backup website files\ntar -czf $BACKUP_DIR/www-html.tar.gz /var/www/html\n\n# Backup database\nmysqldump --all-databases -u root -p'rootDBpass123' > $BACKUP_DIR/all-databases.sql\n\n# Set permissions\nchmod 600 $BACKUP_DIR/all-databases.sql\nchown root:root $BACKUP_DIR/*\n\n# Cleanup old backups (keep last 7 days)\nfind /var/backups/ -type d -mtime +7 -exec rm -rf {} \\; 2>/dev/null",
+        "system-maintenance.sh": "#!/bin/bash\n# System maintenance tasks\n\n# Update package lists\napt-get update > /dev/null\n\n# Check disk space\ndf -h / >> /var/log/disk-usage.log\n\n# Check system load\nuptime >> /var/log/system-load.log\n\n# Cleanup temp files\nfind /tmp -type f -mtime +3 -delete\n"
       },
-      "local": {
-        "bin": {
-          "backup.sh": "#!/bin/bash\n# Backup important data\n\nBACKUP_DIR=\"/var/backups/$(date +%Y-%m-%d)\"\nmkdir -p $BACKUP_DIR\n\n# Backup website files\ntar -czf $BACKUP_DIR/www-html.tar.gz /var/www/html\n\n# Backup database\nmysqldump --all-databases -u root -p'rootDBpass123' > $BACKUP_DIR/all-databases.sql\n\n# Set permissions\nchmod 600 $BACKUP_DIR/all-databases.sql\nchown root:root $BACKUP_DIR/*\n\n# Cleanup old backups (keep last 7 days)\nfind /var/backups/ -type d -mtime +7 -exec rm -rf {} \\; 2>/dev/null",
-          "system-maintenance.sh": "#!/bin/bash\n# System maintenance tasks\n\n# Update package lists\napt-get update > /dev/null\n\n# Check disk space\ndf -h / >> /var/log/disk-usage.log\n\n# Check system load\nuptime >> /var/log/system-load.log\n\n# Cleanup temp files\nfind /tmp -type f -mtime +3 -delete\n"
+      "apache2": {
+        "htdocs": {
+          "index.html": "<html><head><title>Welcome to Apache</title></head><body><h1>It works!</h1><p>This is the default web page for this server.</p></body></html>"
         },
-        "apache2": {
-          "htdocs": {
-            "index.html": "<html><head><title>Welcome to Apache</title></head><body><h1>It works!</h1><p>This is the default web page for this server.</p></body></html>"
-          },
-          "conf": {
-            "httpd.conf": "# Apache HTTP Server Configuration\nServerRoot \"/usr/local/apache2\"\nListen 8080\n\nLoadModule alias_module modules/mod_alias.so\nLoadModule auth_basic_module modules/mod_auth_basic.so\nLoadModule authn_file_module modules/mod_authn_file.so\nLoadModule authz_core_module modules/mod_authz_core.so\nLoadModule authz_host_module modules/mod_authz_host.so\nLoadModule authz_user_module modules/mod_authz_user.so\nLoadModule dir_module modules/mod_dir.so\nLoadModule mime_module modules/mod_mime.so\nLoadModule rewrite_module modules/mod_rewrite.so\nLoadModule php_module modules/libphp.so\n\nServerAdmin admin@example.com\nServerName example.com\n\nDocumentRoot \"/usr/local/apache2/htdocs\"\n\n<Directory \"/usr/local/apache2/htdocs\">\n    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted\n</Directory>\n\nDirectoryIndex index.html index.php\n\nAddType application/x-httpd-php .php\n"
-          }
-        },
-        "etc": {
-          "nginx": {
-            "nginx.conf": "user nginx;\nworker_processes auto;\nworker_rlimit_nofile 65535;\n\nevents {\n    worker_connections 65535;\n    multi_accept on;\n}\n\nhttp {\n    include /usr/local/etc/nginx/mime.types;\n    default_type application/octet-stream;\n\n    access_log /var/log/nginx/access.log;\n    error_log /var/log/nginx/error.log;\n\n    server {\n        listen 80;\n        server_name localhost;\n\n        location / {\n            root /usr/local/www/nginx-dist;\n            index index.html index.htm;\n        }\n    }\n}"
-          }
+        "conf": {
+          "httpd.conf": "# Apache HTTP Server Configuration\nServerRoot \"/usr/local/apache2\"\nListen 8080\n\nLoadModule alias_module modules/mod_alias.so\nLoadModule auth_basic_module modules/mod_auth_basic.so\nLoadModule authn_file_module modules/mod_authn_file.so\nLoadModule authz_core_module modules/mod_authz_core.so\nLoadModule authz_host_module modules/mod_authz_host.so\nLoadModule authz_user_module modules/mod_authz_user.so\nLoadModule dir_module modules/mod_dir.so\nLoadModule mime_module modules/mod_mime.so\nLoadModule rewrite_module modules/mod_rewrite.so\nLoadModule php_module modules/libphp.so\n\nServerAdmin admin@example.com\nServerName example.com\n\nDocumentRoot \"/usr/local/apache2/htdocs\"\n\n<Directory \"/usr/local/apache2/htdocs\">\n    Options Indexes FollowSymLinks\n    AllowOverride All\n    Require all granted\n</Directory>\n\nDirectoryIndex index.html index.php\n\nAddType application/x-httpd-php .php\n"
+        }
+      },
+      "etc": {
+        "nginx": {
+          "nginx.conf": "user nginx;\nworker_processes auto;\nworker_rlimit_nofile 65535;\n\nevents {\n    worker_connections 65535;\n    multi_accept on;\n}\n\nhttp {\n    include /usr/local/etc/nginx/mime.types;\n    default_type application/octet-stream;\n\n    access_log /var/log/nginx/access.log;\n    error_log /var/log/nginx/error.log;\n\n    server {\n        listen 80;\n        server_name localhost;\n\n        location / {\n            root /usr/local/www/nginx-dist;\n            index index.html index.htm;\n        }\n    }\n}"
         }
       }
+    }
+  },
+  "tmp": {
+    "user-uploads": {
+      "test.php": "<?php\n// Test upload file\necho \"Hello World!\";\n?>",
+      "data.csv": "id,name,email\n1,John Doe,john@example.com\n2,Jane Smith,jane@example.com\n3,Bob Johnson,bob@example.com"
     },
-    "tmp": {
-      "user-uploads": {
-        "test.php": "<?php\n// Test upload file\necho \"Hello World!\";\n?>",
-        "data.csv": "id,name,email\n1,John Doe,john@example.com\n2,Jane Smith,jane@example.com\n3,Bob Johnson,bob@example.com"
-      },
-      "sess_bd76hrjqp3tskeq0lad4tpb9f7": "user_id|s:1:\"5\";username|s:5:\"admin\";logged_in|b:1;"
-    },
-    "opt": {
-      "backup": {
-        "scripts": {
-          "backup-db.sh": "#!/bin/bash\n# Backup database\nDB_USER=\"backup\"\nDB_PASS=\"backupuser123\"\nBACKUP_DIR=\"/opt/backup/mysql\"\nDATE=$(date +%Y-%m-%d)\n\nmkdir -p $BACKUP_DIR\n\nmysqldump --all-databases -u $DB_USER -p$DB_PASS > $BACKUP_DIR/all-databases-$DATE.sql"
-        }
-      },
+    "sess_bd76hrjqp3tskeq0lad4tpb9f7": "user_id|s:1:\"5\";username|s:5:\"admin\";logged_in|b:1;"
+  },
+  "opt": {
+    "backup": {
       "scripts": {
-        "setup.sh": "#!/bin/bash\n# Server setup script\n\n# Update system\napt-get update && apt-get upgrade -y\n\n# Install necessary packages\napt-get install -y apache2 php mysql-server fail2ban ufw\n\n# Configure firewall\nufw allow ssh\nufw allow http\nufw allow https\nufw enable\n\n# Enable services\nsystemctl enable apache2\nsystemctl enable mysql\nsystemctl enable fail2ban"
+        "backup-db.sh": "#!/bin/bash\n# Backup database\nDB_USER=\"backup\"\nDB_PASS=\"backupuser123\"\nBACKUP_DIR=\"/opt/backup/mysql\"\nDATE=$(date +%Y-%m-%d)\n\nmkdir -p $BACKUP_DIR\n\nmysqldump --all-databases -u $DB_USER -p$DB_PASS > $BACKUP_DIR/all-databases-$DATE.sql"
       }
     },
-    "dev": {
-      "null": "Special file that discards all data written to it",
-      "zero": "Special file that provides null characters",
-      "random": "Special file that provides random data",
-      "shm": {
-        "session_temp": "Temporary session data in shared memory"
-      }
+    "scripts": {
+      "setup.sh": "#!/bin/bash\n# Server setup script\n\n# Update system\napt-get update && apt-get upgrade -y\n\n# Install necessary packages\napt-get install -y apache2 php mysql-server fail2ban ufw\n\n# Configure firewall\nufw allow ssh\nufw allow http\nufw allow https\nufw enable\n\n# Enable services\nsystemctl enable apache2\nsystemctl enable mysql\nsystemctl enable fail2ban"
+    }
+  },
+  "dev": {
+    "null": "Special file that discards all data written to it",
+    "zero": "Special file that provides null characters",
+    "random": "Special file that provides random data",
+    "shm": {
+      "session_temp": "Temporary session data in shared memory"
     }
   }
 }
