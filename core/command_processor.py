@@ -93,49 +93,186 @@ class CommandProcessor:
         
         self.command_history[session_id].append(command)
         
-        # handle piping (basic implementation)
+        # Parse the command properly to handle quotes and redirection
+        cmd_parts, redirect_type, redirect_file = self._parse_command_with_redirection(command)
+        
+        # If redirection is detected, handle it properly
+        if redirect_type:
+            # Get the command without redirection
+            cmd_without_redirect = " ".join(cmd_parts)
+            
+            # Execute the command to get its output
+            response = self.execute_command(session_id, cmd_without_redirect)
+            
+            # Check if there was an error in the command execution
+            if "No such file or directory" in response or "not found" in response:
+                # If there was an error, return it without doing redirection
+                self.last_exit_code[session_id] = 1
+                return response
+            
+            # Resolve path for output file
+            current_dir = self.current_dirs.get(session_id, f"/home/{USERNAME}")
+            if not redirect_file.startswith('/'):
+                output_path = os.path.normpath(os.path.join(current_dir, redirect_file))
+            else:
+                output_path = redirect_file
+            
+            # For append mode, read existing content first
+            content_to_write = response
+            if redirect_type == '>>' and self.filesystem.file_exists(output_path, session_id):
+                existing_content = self.filesystem.read_file(output_path, session_id)
+                if existing_content and not existing_content.endswith('\n'):
+                    existing_content += '\n'
+                content_to_write = existing_content + response
+            
+            # Write to the file (append or overwrite)
+            result = self.filesystem.write_file(output_path, content_to_write, session_id)
+            
+            if result:
+                self.last_exit_code[session_id] = 0
+                return ""  # Successful redirection produces no output
+            else:
+                self.last_exit_code[session_id] = 1
+                return f"bash: {redirect_file}: Permission denied"
+        
+        # Handle piping (basic implementation)
         if "|" in command:
-            # for now, we'll just handle the first command and return a generic response
+            # For now, we'll just handle the first command and return a generic response
             command = command.split("|")[0].strip()
             self.last_exit_code[session_id] = 0
             return "Command executed. Piping not fully supported in this environment."
         
-        # handle redirection (basic implementation)
-        if ">" in command:
-            parts = command.split(">", 1)
-            cmd = parts[0].strip()
-            output_file = parts[1].strip()
-            
-            # process the command before redirection
-            response = self.execute_command(session_id, cmd)
-
-            # resolve path to handle relative paths correctly
-            current_dir = self.current_dirs.get(session_id, f"/home/{USERNAME}")
-            if not output_file.startswith('/'):
-                output_path = os.path.normpath(os.path.join(current_dir, output_file))
-            else:
-                output_path = output_file
-                
-            result = self.filesystem.write_file(output_path, response, session_id)
-            if result:
-                self.last_exit_code[session_id] = 0
-                return ""  
-            else:
-                self.last_exit_code[session_id] = 1
-                return f"bash: {output_file}: Permission denied"
-        
-        # execute the command
+        # Execute the command normally if no redirection was detected
         return self.execute_command(session_id, command)
+    
+    def _parse_command_with_redirection(self, command):
+        """
+        Parse a command string, handling quotes and redirection.
+        Returns a tuple of (cmd_parts, redirect_type, redirect_file)
+        """
+        cmd_str = command
+        redirect_type = None
+        redirect_file = None
+        
+        # Look for redirection outside of quotes
+        in_single_quotes = False
+        in_double_quotes = False
+        i = 0
+        
+        # First find if there's redirection
+        redirect_pos = -1
+        
+        while i < len(command):
+            char = command[i]
+            
+            # Track quotes state
+            if char == '"' and not in_single_quotes:
+                in_double_quotes = not in_double_quotes
+            elif char == "'" and not in_double_quotes:
+                in_single_quotes = not in_single_quotes
+            
+            # Look for redirection operators, but only outside quotes
+            if not in_single_quotes and not in_double_quotes:
+                if char == '>' and i + 1 < len(command) and command[i + 1] == '>':
+                    redirect_pos = i
+                    redirect_type = '>>'
+                    break
+                elif char == '>' and (i == 0 or command[i - 1] != '>'):
+                    redirect_pos = i
+                    redirect_type = '>'
+                    break
+            
+            i += 1
+        
+        # If redirection found, split the command
+        if redirect_pos >= 0:
+            cmd_str = command[:redirect_pos].strip()
+            
+            # Extract the redirect file portion
+            if redirect_type == '>>':
+                redirect_part = command[redirect_pos + 2:].strip()
+            else:  # '>'
+                redirect_part = command[redirect_pos + 1:].strip()
+            
+            # Parse the redirect file, handling quotes
+            if redirect_part:
+                redirect_file = self._extract_filename(redirect_part)
+        
+        # Parse the command part into arguments
+        cmd_parts = self._split_command(cmd_str)
+        
+        return cmd_parts, redirect_type, redirect_file
+
+    def _extract_filename(self, text):
+        """Extract a filename from text, handling quotes"""
+        # Check if the filename is quoted
+        if (text.startswith('"') and text.endswith('"')) or (text.startswith("'") and text.endswith("'")):
+            # Return without the quotes
+            return text[1:-1]
+        
+        # Otherwise, take the first word
+        return text.split()[0]
+
+    def _split_command(self, cmd_str):
+        """Split a command string into parts, respecting quotes"""
+        parts = []
+        current_part = ""
+        in_single_quotes = False
+        in_double_quotes = False
+        i = 0
+        
+        while i < len(cmd_str):
+            char = cmd_str[i]
+            
+            # Handle quotes
+            if char == '"' and not in_single_quotes:
+                in_double_quotes = not in_double_quotes
+                current_part += char
+            elif char == "'" and not in_double_quotes:
+                in_single_quotes = not in_single_quotes
+                current_part += char
+            # Handle spaces outside quotes as separators
+            elif char.isspace() and not in_single_quotes and not in_double_quotes:
+                if current_part:
+                    parts.append(current_part)
+                    current_part = ""
+            else:
+                current_part += char
+            
+            i += 1
+        
+        # Add the last part if there is one
+        if current_part:
+            parts.append(current_part)
+        
+        return parts
     
     def execute_command(self, session_id, command):
         """Execute a specific command"""
-        # split command and arguments
-        parts = command.split()
+        # For commands with quotes, we need to parse more carefully
+        if '"' in command or "'" in command:
+            parts = self._split_command(command)
+        else:
+            # Simple space splitting for commands without quotes
+            parts = command.split()
+        
         if not parts:
             return ""
         
+        # Extract the command name and arguments
         cmd = parts[0].lower()
-        args = parts[1:] if len(parts) > 1 else []
+        
+        # Process quotes in arguments for commands that need it
+        if cmd in ["cat", "echo", "touch", "mkdir", "rm", "mv", "cp"]:
+            args = []
+            for arg in parts[1:]:
+                # Remove surrounding quotes if present
+                if (arg.startswith('"') and arg.endswith('"')) or (arg.startswith("'") and arg.endswith("'")):
+                    args.append(arg[1:-1])
+                else:
+                    args.append(arg)
+        else:
+            args = parts[1:] if len(parts) > 1 else []
         
         # handle different commands
         if cmd == "ls":
@@ -372,90 +509,110 @@ class CommandProcessor:
         return stats
     
     def cmd_ls(self, session_id, args):
-        """Handle ls command with improved support for -la flags"""
-        # Parse flags and targets
+        """handle ls command with improved support for -la flags"""
+        # parse flags and targets
         flags = [arg for arg in args if arg.startswith("-")]
         targets = [arg for arg in args if not arg.startswith("-")]
         
         current_dir = self.current_dirs.get(session_id, "/home/haskoli")
         
-        # Process flags
+        # process flags
         show_hidden = False
         long_format = False
+        show_indicators = False
         
-        # Check for combined flags like -la or -al
+        # check for combined flags
         for flag in flags:
             if 'a' in flag:
                 show_hidden = True
             if 'l' in flag:
                 long_format = True
+            if 'F' in flag:
+                show_indicators = True
         
-        # If no targets, use current directory
+        # if no targets, use current directory
         if not targets:
             targets = [current_dir]
         
         results = []
         for target in targets:
-            # Resolve the path
+            # resolve the path
             if not target.startswith('/'):
                 target_path = os.path.normpath(os.path.join(current_dir, target))
             else:
                 target_path = target
             
-            # Get directory contents
-            dir_listing = self.filesystem.list_directory(target_path, session_id)
-            
-            # If multiple targets, show directory names
+            # if multiple targets, show directory names
             if len(targets) > 1:
                 results.append(f"{target_path}:")
             
-            # Process directory listing
+            # get directory contents
+            dir_listing = self.filesystem.list_directory(target_path, session_id)
+            
+            # process directory listing
             if isinstance(dir_listing, str) and "cannot access" not in dir_listing:
+                # remove ansi color codes for processing
+                plain_listing = dir_listing.replace("\033[1;34m", "").replace("\033[1;32m", "").replace("\033[0m", "")
+                
+                # split into individual files
+                files = [f.rstrip('*/') for f in plain_listing.split("  ") if f]
+                
+                # filter hidden files if not showing hidden
+                if not show_hidden:
+                    files = [f for f in files if not f.startswith('.')]
+                
+                # process according to format
                 if long_format:
-                    # Simulate long format (-l)
-                    # First get the raw file list
-                    files = dir_listing.replace("\033[1;34m", "").replace("\033[1;32m", "").replace("\033[0m", "")
-                    file_list = [f.rstrip('*/') for f in files.split("  ") if f]
-                    
-                    # Filter hidden files if not showing hidden
-                    if not show_hidden:
-                        file_list = [f for f in file_list if not f.startswith('.')]
-                    
-                    # Format in long format
+                    # long format (-l)
                     long_results = []
-                    for filename in sorted(file_list):
-                        # Check if it's a directory
+                    for filename in sorted(files):
+                        # check if it's a directory
                         file_path = os.path.join(target_path, filename)
                         is_dir = self.filesystem.is_directory(file_path, session_id)
                         
-                        # Simulate permissions, size, date
+                        # simulate permissions, size, date
                         perm = "drwxr-xr-x" if is_dir else "-rw-r--r--"
                         size = "4096" if is_dir else str(random.randint(100, 10000))
                         date = datetime.datetime.now().strftime("%b %d %H:%M")
-                        owner = "haskoli"
-                        group = "haskoli"
+                        owner = USERNAME
+                        group = USERNAME
                         
-                        # Add color for directories
-                        display_name = f"\033[1;34m{filename}\033[0m" if is_dir else filename
+                        # form the long listing line
+                        display_name = filename
+                        if is_dir and show_indicators:
+                            display_name += "/"
                         
-                        # Form the long listing line
+                        # add color if it's a directory (maintained for visual output)
+                        if is_dir:
+                            display_name = f"\033[1;34m{display_name}\033[0m"
+                            
                         line = f"{perm} 1 {owner} {group} {size.rjust(8)} {date} {display_name}"
                         long_results.append(line)
                     
                     results.append("\n".join(long_results))
                 else:
-                    # Regular format, just filter hidden files if needed
-                    if not show_hidden:
-                        # Split by double spaces, filter hidden files, rejoin
-                        files = dir_listing.split("  ")
-                        filtered_files = [f for f in files if not f.strip().startswith('.')]
-                        dir_listing = "  ".join(filtered_files)
+                    # regular format
+                    formatted_files = []
+                    for filename in sorted(files):
+                        file_path = os.path.join(target_path, filename)
+                        is_dir = self.filesystem.is_directory(file_path, session_id)
+                        
+                        display_name = filename
+                        # add indicator if requested
+                        if is_dir and show_indicators:
+                            display_name += "/"
+                        
+                        # add color for directories (maintained for visual output)
+                        if is_dir:
+                            display_name = f"\033[1;34m{display_name}\033[0m"
+                        
+                        formatted_files.append(display_name)
                     
-                    results.append(dir_listing)
+                    results.append("  ".join(formatted_files))
             else:
-                # Error message or empty directory
+                # error message or empty directory
                 results.append(dir_listing)
-                
+            
             if len(targets) > 1 and target != targets[-1]:
                 results.append("")
         
@@ -752,6 +909,8 @@ class CommandProcessor:
         current_dir = self.current_dirs.get(session_id, f"/home/{USERNAME}")
         
         results = []
+        error_found = False
+        
         for filename in args:
             # Resolve the path
             if not filename.startswith('/'):
@@ -759,6 +918,18 @@ class CommandProcessor:
             else:
                 file_path = filename
             
+            # Check if file exists
+            if not self.filesystem.file_exists(file_path, session_id):
+                error_found = True
+                results.append(f"cat: {filename}: No such file or directory")
+                continue
+            
+            # Check if it's a directory
+            if self.filesystem.is_directory(file_path, session_id):
+                error_found = True
+                results.append(f"cat: {filename}: Is a directory")
+                continue
+                
             content = self.filesystem.read_file(file_path, session_id)
             
             # make sure multiline content is properly formatted
@@ -767,13 +938,48 @@ class CommandProcessor:
                 
             results.append(content)
         
-        self.last_exit_code[session_id] = 0
+        self.last_exit_code[session_id] = 0 if not error_found else 1
         return "\n".join(results)
     
     def cmd_echo(self, session_id, args):
-        """Handle echo command"""
+        """Handle echo command with proper handling of quotes and escapes"""
+        if not args:
+            # Empty echo just produces a newline
+            self.last_exit_code[session_id] = 0
+            return ""
+        
+        # Check for options
+        options = []
+        non_option_args = []
+        
+        for arg in args:
+            if arg.startswith('-'):
+                options.append(arg)
+            else:
+                non_option_args.append(arg)
+        
+        # Process options
+        no_newline = '-n' in options  # Don't add a newline at the end
+        interpret_escapes = '-e' in options  # Interpret backslash escapes
+        
+        # Join the non-option arguments
+        result = " ".join(non_option_args)
+        
+        # Handle escape sequences if -e is specified
+        if interpret_escapes:
+            result = result.replace("\\n", "\n")
+            result = result.replace("\\t", "\t")
+            result = result.replace("\\r", "\r")
+            result = result.replace("\\b", "\b")
+            result = result.replace("\\a", "\a")
+            result = result.replace("\\v", "\v")
+            result = result.replace("\\\\", "\\")
+            result = result.replace('\\"', '"')
+            result = result.replace("\\'", "'")
+        
+        # Set the exit code and return the result
         self.last_exit_code[session_id] = 0
-        return " ".join(args)
+        return result
     
     def cmd_mkdir(self, session_id, args):
         """Handle mkdir command"""
