@@ -21,7 +21,31 @@ class DirectOllamaInference:
         # list of commands that are natively implemented
         self.native_commands = NATIVE_COMMANDS
         
+        # also store a reference to known commands from the command processor
+        self.known_commands = set()
+        
         logger.info(f"Initialized DirectOllamaInference with model {self.model}")
+        
+    def set_known_commands(self, known_commands):
+        """Set the list of known commands from the command processor"""
+        self.known_commands = known_commands
+        logger.info(f"DirectOllamaInference: Set {len(known_commands)} known commands")
+        
+    def is_native_command(self, command):
+        """Check if a command is natively implemented in the shell or is invalid"""
+        cmd = command.split()[0].lower() if command else ""
+        
+        # check if it's a native command (directly implemented)
+        if cmd in self.native_commands:
+            return True
+        
+        # check if it's an unknown command (not in the known_commands list),
+        # treat unknown commands as "native" so they get the proper "command not found" message
+        if cmd not in self.known_commands:
+            return True
+        
+        # if it's a known command but not native, use AI
+        return False
         
     def process_command(self, session_id, command, token_callback=None):
         # Maintain minimal session context
@@ -102,11 +126,6 @@ class DirectOllamaInference:
             if token_callback:
                 token_callback(error_message)
             return error_message
-            
-    def is_native_command(self, command):
-        """Check if a command is natively implemented in the shell"""
-        cmd = command.split()[0].lower() if command else ""
-        return cmd in self.native_commands
             
     def cleanup_session(self, session_id):
         """Clean up session data"""
