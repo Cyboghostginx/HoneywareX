@@ -5,15 +5,9 @@ import os
 import sys
 import types
 from utils.log_setup import logger
+from utils.command_utils import NATIVE_COMMANDS
 from config import RAG_OLLAMA_URL, RAG_MODEL, RAG_COMMANDS_FILE, RAG_STREAM_OUTPUT
 from core.server import active_command
-
-# list of commands natively handled by the honeypot, this should be kept in sync with the actual implemented commands in command_processor.py
-NATIVE_COMMANDS = [
-    'ls', 'cd', 'pwd', 'cat', 'echo', 'mkdir', 'rm', 'touch',
-    'whoami', 'uname', 'ps', 'date', 'clear', 'exit', 'quit', 'logout',
-    'ping', 'ifconfig', 'cp', 'mv', 'sudo'
-]
 
 # absolute paths
 DOCS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
