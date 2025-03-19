@@ -31,21 +31,20 @@ class DirectOllamaInference:
         self.known_commands = known_commands
         logger.info(f"DirectOllamaInference: Set {len(known_commands)} known commands")
         
-    def is_native_command(self, command):
+    # Add this code to direct_inference.py and rag_integration.py
+
+    def is_native_command(self, command_input):
         """Check if a command is natively implemented in the shell or is invalid"""
-        cmd = command.split()[0].lower() if command else ""
+        cmd = command_input.split()[0].lower() if command_input else ""
         
         # check if it's a native command (directly implemented)
-        if cmd in self.native_commands:
-            return True
+        result = cmd in self.native_commands
         
         # check if it's an unknown command (not in the known_commands list),
         # treat unknown commands as "native" so they get the proper "command not found" message
-        if cmd not in self.known_commands:
-            return True
-        
-        # if it's a known command but not native, use AI
-        return False
+        if not result:
+            result = cmd not in self.known_commands
+        return result
         
     def process_command(self, session_id, command, token_callback=None):
         # Maintain minimal session context
