@@ -52,24 +52,20 @@ class SmartRAGIntegration:
         except Exception as e:
             logger.error(f"Error initializing SmartRAGIntegration: {e}")
     
+    # Add this code to direct_inference.py and rag_integration.py
+
     def is_native_command(self, command_input):
-        """Check if the command is natively handled by the honeypot or is invalid"""
-        if not command_input or command_input.strip() == "":
-            return True  # empty commands are handled natively
-            
-        # extract the main command (first word)
-        command = command_input.strip().split()[0] if command_input.strip() else ""
+        """Check if a command is natively implemented in the shell or is invalid"""
+        cmd = command_input.split()[0].lower() if command_input else ""
         
         # check if it's a native command (directly implemented)
-        if command in NATIVE_COMMANDS:
-            return True
+        result = cmd in self.native_commands
         
-        # check if it's an unknown command (not in the known commands list), treat unknown commands as "native" so they get the proper "command not found" message
-        if command not in self.known_commands:
-            return True
-        
-        # if it's a known command but not native, use RAG
-        return False
+        # check if it's an unknown command (not in the known_commands list),
+        # treat unknown commands as "native" so they get the proper "command not found" message
+        if not result:
+            result = cmd not in self.known_commands
+        return result
     
     def check_ollama_status(self):
         """Check if Ollama is still available"""
