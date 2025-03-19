@@ -5,6 +5,7 @@ import requests
 import json
 import time
 from utils.log_setup import logger
+from utils.command_utils import NATIVE_COMMANDS
 from config import RAG_OLLAMA_URL, RAG_MODEL, RAG_TOKEN_DELAY, RAG_STREAM_OUTPUT
 from core.server import active_command
 
@@ -18,11 +19,7 @@ class DirectOllamaInference:
         self.active_sessions = {}
         
         # list of commands that are natively implemented
-        self.native_commands = [
-            "ls", "cd", "pwd", "cat", "echo", "mkdir", "rm", "touch", 
-            "whoami", "uname", "ps", "date", "clear", "exit", "quit", 
-            "logout", "ping", "ifconfig", "cp", "mv", "sudo"
-        ]
+        self.native_commands = NATIVE_COMMANDS
         
         logger.info(f"Initialized DirectOllamaInference with model {self.model}")
         
