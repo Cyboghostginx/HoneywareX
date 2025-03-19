@@ -89,6 +89,11 @@ def integrate_ai_with_command_processor(command_processor):
             # create the direct inference handler
             direct_inference = DirectOllamaInference()
             
+            # ADDED: Set the known commands from the command processor
+            if hasattr(command_processor, 'known_commands'):
+                direct_inference.set_known_commands(command_processor.known_commands)
+                logger.info("Set known commands for direct inference")
+            
             # store reference to original execute_command and process_command methods
             original_execute = command_processor.execute_command
             original_process = command_processor.process_command
