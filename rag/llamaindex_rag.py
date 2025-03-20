@@ -24,7 +24,7 @@ from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core.chat_engine import SimpleChatEngine
 from llama_index.core import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from config import RAG_OLLAMA_URL, RAG_COMMANDS_FILE, RAG_STREAM_OUTPUT, RAG_TOKEN_DELAY, USERNAME
+from config import RAG_OLLAMA_URL, RAG_COMMANDS_FILE, RAG_STREAM_OUTPUT, RAG_TOKEN_DELAY, USERNAME, RAG_MODEL
 
 # honeypot imports
 from utils.log_setup import logger
@@ -41,7 +41,7 @@ class LlamaIndexRAG:
         self, 
         commands_file=COMMANDS_DOCS_FILE,
         storage_dir=VECTOR_STORE_DIR,
-        model_name="llama3.2:3b",
+        model_name=RAG_MODEL,
         embed_model_name="BAAI/bge-large-en-v1.5",
         chunk_size=100,  # increased for better context
         chunk_overlap=0,  # added overlap for better continuity
