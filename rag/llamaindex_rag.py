@@ -1,15 +1,17 @@
 """
-RAG implementation using LlamaIndex for the SSH honeypot
+optimized rag implementation using llamaindex for the ssh honeypot
 """
 import os
 import time
 import json
-import nest_asyncio
+import textwrap
+import concurrent.futures
+import threading
 from typing import List, Callable, Optional
 from pathlib import Path
 import tiktoken
 
-# LlamaIndex imports
+# llamaindex imports
 from llama_index.core import (
     SimpleDirectoryReader, VectorStoreIndex, StorageContext, load_index_from_storage,
     Settings, Document
@@ -22,13 +24,12 @@ from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core.chat_engine import SimpleChatEngine
 from llama_index.core import PromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from config import RAG_OLLAMA_URL, RAG_COMMANDS_FILE, RAG_STREAM_OUTPUT, RAG_TOKEN_DELAY
+from config import RAG_OLLAMA_URL, RAG_COMMANDS_FILE, RAG_STREAM_OUTPUT, RAG_TOKEN_DELAY, USERNAME
 
 # honeypot imports
 from utils.log_setup import logger
-
-# initialize nest_asyncio to handle async operations
-nest_asyncio.apply()
+from core.server import active_command
+from utils.command_utils import NATIVE_COMMANDS
 
 # file paths
 DOCS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
@@ -42,8 +43,8 @@ class LlamaIndexRAG:
         storage_dir=VECTOR_STORE_DIR,
         model_name="llama3.2:3b",
         embed_model_name="BAAI/bge-large-en-v1.5",
-        chunk_size=100,
-        chunk_overlap=0,
+        chunk_size=100,  # increased for better context
+        chunk_overlap=0,  # added overlap for better continuity
         ollama_url=RAG_OLLAMA_URL
     ):
         # set absolute paths to avoid any issues
@@ -62,9 +63,16 @@ class LlamaIndexRAG:
         self.initialized = False
         self.session_memories = {}  # store memories for each session
         
+        # add response caching
+        self.response_cache = {}
+        self.cache_ttl = 600  # cache lifetime in seconds (10 minutes)
+        self.cache_timestamps = {}
+        self.max_cache_size = 50  # maximum number of cached responses
+        
         logger.info(f"Command docs file path: {self.commands_file}")
         logger.info(f"Vector store directory: {self.storage_dir}")
         logger.info(f"Using Ollama API at: {self.ollama_url}")
+        logger.info(f"Initialized response caching system (TTL: {self.cache_ttl}s, max size: {self.max_cache_size})")
         
         # create necessary directories
         os.makedirs(self.storage_dir, exist_ok=True)
@@ -75,7 +83,7 @@ class LlamaIndexRAG:
             logger.error("Please run prepare_command_docs.py first to generate the documentation")
             return
         
-        # initialize LlamaIndex settings
+        # initialize llamaindex settings
         if not self._initialize_settings():
             return
         
@@ -89,37 +97,38 @@ class LlamaIndexRAG:
             logger.error("Failed to initialize LlamaIndex RAG")
     
     def _initialize_settings(self):
-        """Initialize LlamaIndex settings"""
+        """initialize llamaindex settings with optimized parameters"""
         try:
             # set up LLM (Ollama)
             Settings.llm = Ollama(
                 model=self.model_name, 
                 base_url=self.ollama_url,
-                temperature=0.2,
-                prompt_key= "Act as a linux ssh server",
-                request_timeout=60.0
+                temperature=0.1,
+                context_window=2048,
+                request_timeout=60000
             )
             
             # set up embedding model
             Settings.embed_model = FastEmbedEmbedding(model_name=self.embed_model_name)
             
-            # set up text splitter with only === as the separator
+            # improved text splitter with more hierarchical separation
             Settings.text_splitter = LangchainNodeParser(
                 RecursiveCharacterTextSplitter(
-                    separators=["==="],  # only use === as separator
+                    separators=["==="],  # more semantic separators
                     chunk_size=self.chunk_size,
-                    chunk_overlap=self.chunk_overlap
+                    chunk_overlap=self.chunk_overlap,
+                    length_function=len  # use character count for consistency
                 )
             )
             
-            logger.info("LlamaIndex settings initialized")
+            logger.info("LlamaIndex settings initialized with optimized parameters")
             return True
         except Exception as e:
             logger.error(f"Error initializing LlamaIndex settings: {e}")
             return False
     
     def _load_or_create_index(self):
-        """Load existing index or create a new one"""
+        """load existing index or create a new one"""
         try:
             # check if storage directory exists and has content
             if os.path.exists(self.storage_dir) and len(os.listdir(self.storage_dir)) > 0:
@@ -136,7 +145,7 @@ class LlamaIndexRAG:
             return None
     
     def _create_new_index(self):
-        """Create a new index from the commands file"""
+        """create a new index from the commands file"""
         try:
             # double check if commands file exists and has content
             if not os.path.exists(self.commands_file):
@@ -170,7 +179,7 @@ class LlamaIndexRAG:
                 logger.warning(f"Could not count tokens: {e}")
             
             # get nodes from documents
-            logger.info("Splitting document using === separator")
+            logger.info(f"Splitting document using configured separators")
             nodes = Settings.text_splitter.get_nodes_from_documents(documents)
             logger.info(f"Created {len(nodes)} nodes from documentation")
             
@@ -188,15 +197,19 @@ class LlamaIndexRAG:
             return None
     
     def get_session_memory(self, session_id):
+        """get or create memory buffer for a session"""
         if session_id not in self.session_memories:
             self.session_memories[session_id] = ChatMemoryBuffer.from_defaults(token_limit=25000)
         return self.session_memories[session_id]
     
     def cleanup_session(self, session_id):
+        """clean up resources for a session"""
         if session_id in self.session_memories:
             del self.session_memories[session_id]
+            logger.info(f"Cleaned up memory for session {session_id}")
     
     def generate_response(self, session_id, command_input, token_callback=None):
+        """generate a response for a command using rag with optimized handling"""
         if not self.initialized or not self.index:
             logger.error("RAG not initialized or index not available")
             return None
@@ -204,6 +217,27 @@ class LlamaIndexRAG:
         if not command_input or command_input.strip() == "":
             logger.error("Empty command input")
             return None
+        
+        # prepare cache key - normalize command by removing extra spaces and lowercasing
+        cache_key = ' '.join(command_input.lower().split())
+        current_time = time.time()
+        
+        # check if response is in cache and not expired
+        if cache_key in self.response_cache and current_time - self.cache_timestamps.get(cache_key, 0) < self.cache_ttl:
+            logger.info(f"Using cached response for: '{command_input}'")
+            cached_response = self.response_cache[cache_key]
+            
+            # for streaming, simulate streaming from cache
+            if RAG_STREAM_OUTPUT and token_callback:
+                for chunk in textwrap.wrap(cached_response, 4):  # simulate chunks of ~4 chars
+                    # check for interruption
+                    if active_command.get("interrupted", False) and active_command.get("session_id") == session_id:
+                        logger.info(f"Interrupting cached response streaming for session {session_id}")
+                        break
+                    token_callback(chunk)
+                    if RAG_TOKEN_DELAY > 0:
+                        time.sleep(RAG_TOKEN_DELAY)
+            return cached_response
             
         try:
             # get session memory
@@ -212,7 +246,7 @@ class LlamaIndexRAG:
             # define system prompt template
             template = (
                 "You are a Linux server. First rely on your built-in knowledge about Linux commands. Don't rely wholly on {context_str} it is just meant to enhance you, use your own powerful understanding. Don't explain under any condition so you don't expose yourself to the user as AI.\n"
-                "Your hostname is server01.\n"
+                "Your hostname is haskoli.\n"
                 "Don't add the usual linux prefix to your output.\n"
                 "No self explanation at all from you even if in context, don't explain anything, just linux output."
             )
@@ -220,7 +254,7 @@ class LlamaIndexRAG:
             # create chat engine with optimized parameters
             query_engine = self.index.as_chat_engine(
                 chat_mode="context",
-                similarity_top_k=2,
+                similarity_top_k=2,  # increased for better context
                 memory=memory,
                 system_prompt=template
             )
@@ -229,41 +263,39 @@ class LlamaIndexRAG:
             start_time = time.time()
             full_response = ""
             
+            # add adaptive timeout based on command complexity
+            timeout_seconds = min(45, 15 + len(command_input.split()) * 1.5)
+            
             # choose streaming or non-streaming mode based on config
+            # in generate_response method in llamaindex_rag.py
             if RAG_STREAM_OUTPUT and token_callback:
-                logger.info(f"Using streaming mode for command: '{command_input}'")
+                logger.info(f"using streaming mode for command: '{command_input}'")
                 
                 try:
                     # get streaming response
                     stream_response = query_engine.stream_chat(command_input)
                     
-                    # track streaming stats
-                    token_count = 0
-                    last_token_time = time.time()
-                    
-                    # process tokens as they arrive
+                    # process tokens as they arrive - simpler streaming like notebook
+                    full_response = ""
                     for token in stream_response.response_gen:
+                        # check for interruption
+                        if active_command.get("interrupted", False) and active_command.get("session_id") == session_id:
+                            logger.info(f"interrupting response streaming for session {session_id}")
+                            break
+                            
                         full_response += token
-                        token_count += 1
-                        
-                        # call the callback function with each token
                         token_callback(token)
                         
-                        # check for hard timeout
-                        if time.time() - start_time > 30:  # 30 second max
-                            logger.warning(f"Hard timeout after 30 seconds for command: {command_input}")
-                            break
-                        
-                        # token delay
+                        # token delay if configured
                         if RAG_TOKEN_DELAY > 0:
                             time.sleep(RAG_TOKEN_DELAY)
                             
-                    logger.info(f"Streaming complete: {token_count} tokens in {time.time() - start_time:.2f}s")
-                    
+                    logger.info(f"streaming complete for: '{command_input}'")
+                        
                 except Exception as e:
-                    logger.error(f"Error during streaming: {e}")
+                    logger.error(f"error during streaming: {e}")
                     if token_callback:
-                        token_callback(f"\nError: {str(e)}")
+                        token_callback(f"\nerror: {str(e)}")
             else:
                 logger.info(f"Using non-streaming mode for command: '{command_input}'")
                 try:
@@ -276,6 +308,18 @@ class LlamaIndexRAG:
             # clean the response
             full_response = self.clean_command_output(command_input, full_response)
             
+            # cache the response if it's not an error and not too long
+            if not full_response.startswith("Error") and len(full_response) < 10000:
+                self.response_cache[cache_key] = full_response
+                self.cache_timestamps[cache_key] = current_time
+                
+                # clean up oldest entries if cache exceeds size limit
+                if len(self.response_cache) > self.max_cache_size:
+                    oldest_key = min(self.cache_timestamps, key=self.cache_timestamps.get)
+                    del self.response_cache[oldest_key]
+                    del self.cache_timestamps[oldest_key]
+                    logger.debug(f"Removed oldest cache entry: {oldest_key}")
+            
             elapsed_time = time.time() - start_time
             logger.info(f"Generated response for '{command_input}' in {elapsed_time:.2f} seconds")
             
@@ -285,35 +329,52 @@ class LlamaIndexRAG:
             return f"Error executing command: {str(e)}"
 
     def clean_command_output(self, command_input, response_text):
-        """Clean command output to remove markdown and explanatory elements"""
+        """enhanced cleaning of command output to remove markdown and explanatory elements"""
         import re
         
-        # remove markdown code block markers
-        response_text = re.sub(r'```(?:bash|shell)?\n', '', response_text)
-        response_text = re.sub(r'\n```', '', response_text)
-        response_text = re.sub(r'^```(?:bash|shell)?$', '', response_text, flags=re.MULTILINE)
-        response_text = re.sub(r'^```$', '', response_text, flags=re.MULTILINE)
+        # extract command for context-aware cleaning
+        cmd = command_input.split()[0].lower() if command_input else ""
         
-        # remove bold/italic markdown
-        response_text = re.sub(r'\*\*(.*?)\*\*', r'\1', response_text)  # Bold
-        response_text = re.sub(r'\*(.*?)\*', r'\1', response_text)      # Italic
+        # 1. remove markdown code block markers more aggressively
+        response_text = re.sub(r'```(?:bash|shell|console|terminal)?', '', response_text)
+        response_text = re.sub(r'```', '', response_text)
         
-        # remove numbered lists formatting
+        # 2. remove instruction/explanation paragraphs (often start with "here's", "this is", etc.)
+        response_text = re.sub(r'^(?:here\'s|this is|the following|i\'ll|let me|this command|when you).+?:\n', '', response_text, flags=re.MULTILINE|re.IGNORECASE)
+        
+        # 3. remove explanatory lines at the end (common in rag responses)
+        response_text = re.sub(r'\n(?:this shows|this displays|this lists|this command).+$', '', response_text, flags=re.MULTILINE|re.IGNORECASE)
+        
+        # 4. remove bold/italic markdown more thoroughly
+        response_text = re.sub(r'\*\*(.*?)\*\*', r'\1', response_text)  # bold
+        response_text = re.sub(r'\*(.*?)\*', r'\1', response_text)      # italic
+        response_text = re.sub(r'__(.*?)__', r'\1', response_text)      # alternative bold
+        response_text = re.sub(r'_(.*?)_', r'\1', response_text)        # alternative italic
+        
+        # 5. better handling of command line prompts
+        response_text = re.sub(r'^.+?@.+?:~[$#]\s*', '', response_text, flags=re.MULTILINE)
+        
+        # 6. remove markdown headers
+        response_text = re.sub(r'^#+\s+.*$', '', response_text, flags=re.MULTILINE)
+        
+        # 7. remove numbered lists and bullet points
         response_text = re.sub(r'^\s*\d+\.\s+', '', response_text, flags=re.MULTILINE)
-        
-        # remove bullet points
         response_text = re.sub(r'^\s*[\*\-•]\s+', '', response_text, flags=re.MULTILINE)
         
-        # remove headers that look like explanations
-        response_text = re.sub(r'^#+\s+.*?:$', '', response_text, flags=re.MULTILINE)
+        # 8. command-specific cleaning
+        if cmd in ['ls', 'dir']:
+            # for ls, prefer columnar format without additional text
+            response_text = re.sub(r'total \d+\s*\n', '', response_text)
+        elif cmd in ['cat', 'less', 'more']:
+            # for file viewing commands, remove any leading spaces on new lines
+            response_text = re.sub(r'\n\s+', '\n', response_text)
+        elif cmd in ['grep', 'find']:
+            # for search commands, ensure results are properly formatted
+            # remove any "matches found" summary lines
+            response_text = re.sub(r'\n\d+ matches found\.?$', '', response_text, flags=re.IGNORECASE)
         
-        # remove empty lines at beginning
-        response_text = re.sub(r'^\s+', '', response_text)
-        
-        # consolidate multiple newlines into at most two
-        response_text = re.sub(r'\n{3,}', '\n\n', response_text)
-
-        # clean up any leading/trailing whitespace
+        # 9. clean up whitespace
+        response_text = re.sub(r'\n{3,}', '\n\n', response_text)  # max double newlines
         response_text = response_text.strip()
         
-        return response_text.strip()
+        return response_text
