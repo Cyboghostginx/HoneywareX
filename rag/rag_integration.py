@@ -24,6 +24,7 @@ class SmartRAGIntegration:
         self.initialized = False
         self.known_commands = known_commands or set()
         self.streaming_sessions = {}  # track active streaming sessions
+        self.native_commands = NATIVE_COMMANDS
         
         # check if command docs file exists
         if not os.path.exists(COMMANDS_DOCS_FILE):
