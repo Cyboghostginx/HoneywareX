@@ -35,6 +35,7 @@ from utils.command_utils import NATIVE_COMMANDS
 DOCS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 COMMANDS_DOCS_FILE = RAG_COMMANDS_FILE
 VECTOR_STORE_DIR = os.path.join(DOCS_DIR, "vector_store")
+EMBED_CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "embed_cache")
 
 class LlamaIndexRAG:
     def __init__(
@@ -76,6 +77,7 @@ class LlamaIndexRAG:
         
         # create necessary directories
         os.makedirs(self.storage_dir, exist_ok=True)
+        os.makedirs(EMBED_CACHE_DIR, exist_ok=True)  # Create embedding cache directory
         
         # check if command docs file exists
         if not os.path.exists(self.commands_file):
@@ -99,6 +101,12 @@ class LlamaIndexRAG:
     def _initialize_settings(self):
         """initialize llamaindex settings with optimized parameters"""
         try:
+            # Set environment variables to control embedding model cache location
+            os.environ["FASTEMBED_CACHE_PATH"] = EMBED_CACHE_DIR
+            os.environ["TRANSFORMERS_CACHE"] = EMBED_CACHE_DIR
+            os.environ["HF_HOME"] = EMBED_CACHE_DIR
+            logger.info(f"Set embedding cache environment variables to: {EMBED_CACHE_DIR}")
+            
             # set up LLM (Ollama)
             Settings.llm = Ollama(
                 model=self.model_name, 
