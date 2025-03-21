@@ -237,12 +237,14 @@ class LlamaIndexRAG:
             
             # for streaming, simulate streaming from cache
             if RAG_STREAM_OUTPUT and token_callback:
-                for chunk in textwrap.wrap(cached_response, 4):  # simulate chunks of ~4 chars
+                # Always stream by lines to preserve exact formatting
+                for line in cached_response.split('\n'):
                     # check for interruption
                     if active_command.get("interrupted", False) and active_command.get("session_id") == session_id:
                         logger.info(f"Interrupting cached response streaming for session {session_id}")
                         break
-                    token_callback(chunk)
+                    # Send complete line with newline to preserve exact formatting
+                    token_callback(line + '\n')
                     if RAG_TOKEN_DELAY > 0:
                         time.sleep(RAG_TOKEN_DELAY)
             return cached_response
@@ -254,7 +256,7 @@ class LlamaIndexRAG:
             # define system prompt template
             template = (
                 "You are a Linux server. First rely on your built-in knowledge about Linux commands. Don't rely wholly on {context_str} it is just meant to enhance you, use your own powerful understanding. Don't explain under any condition so you don't expose yourself to the user as AI.\n"
-                "Your hostname is haskoli.\n"
+                "Your hostname is server01.\n"
                 "Don't add the usual linux prefix to your output.\n"
                 "No self explanation at all from you even if in context, don't explain anything, just linux output."
             )
@@ -275,7 +277,6 @@ class LlamaIndexRAG:
             timeout_seconds = min(45, 15 + len(command_input.split()) * 1.5)
             
             # choose streaming or non-streaming mode based on config
-            # in generate_response method in llamaindex_rag.py
             if RAG_STREAM_OUTPUT and token_callback:
                 logger.info(f"using streaming mode for command: '{command_input}'")
                 
