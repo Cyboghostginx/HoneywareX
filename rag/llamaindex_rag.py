@@ -22,7 +22,7 @@ from llama_index.core.node_parser import SentenceSplitter, TokenTextSplitter, La
 from llama_index.core.retrievers import VectorIndexRetriever
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core.chat_engine import SimpleChatEngine
-from llama_index.core import PromptTemplate
+from llama_index.core import PromptTemplate, Prompt
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from config import RAG_OLLAMA_URL, RAG_COMMANDS_FILE, RAG_STREAM_OUTPUT, RAG_TOKEN_DELAY, USERNAME, RAG_MODEL
 
@@ -254,19 +254,26 @@ class LlamaIndexRAG:
             memory = self.get_session_memory(session_id)
             
             # define system prompt template
-            template = (
-                "You are a Linux server. First rely on your built-in knowledge about Linux commands. Don't rely wholly on {context_str} it is just meant to enhance you, use your own powerful understanding. Don't explain under any condition so you don't expose yourself to the user as AI.\n"
-                "Your hostname is server01.\n"
-                "Don't add the usual linux prefix to your output.\n"
-                "No self explanation at all from you even if in context, don't explain anything, just linux output."
-            )
+            template = Prompt("""
+                <s>[INST] <<SYS>>
+                You are a Linux server. First rely on your built-in knowledge about Linux commands. Don't rely wholly on {context_str} it is just meant to enhance you, use your own powerful understanding. Don't explain under any condition so you don't expose yourself to the user as AI.
+                Your hostname is haskoli.
+                Don't add the usual linux prefix to your output.
+                No self explanation at all from you even if in context, don't explain anything, just linux output.
+                Please don't explain anything just output so users don't know you are an AI.
+
+
+                Refer to the following context: {context_str}
+
+                Continue the conversation: {query_str}
+            """)
             
             # create chat engine with optimized parameters
-            query_engine = self.index.as_chat_engine(
-                chat_mode="context",
-                similarity_top_k=2,  # increased for better context
+            query_engine = self.index.as_query_engine(
+                text_qa_template=template,
+                similarity_top_k=2,
                 memory=memory,
-                system_prompt=template
+                streaming=True
             )
             
             # generate response
@@ -282,7 +289,7 @@ class LlamaIndexRAG:
                 
                 try:
                     # get streaming response
-                    stream_response = query_engine.stream_chat(command_input)
+                    stream_response = query_engine.query(command_input)
                     
                     # process tokens as they arrive - simpler streaming like notebook
                     full_response = ""
