@@ -15,6 +15,7 @@ echo -e "\n"
 
 # Pull Ollama's models needed from repository
 ollama pull Cyboghost/llama-linux:latest # any Model to be used can be changed here
+ollama pull Cyboghost/gemma3-4b-linux:latest # any Model to be used can be changed here
 ollama pull Cyboghost/gemma3-linux:latest # any Model to be used can be changed here
 sleep 3
 # We can start with these 2 model for testing and add on later.
