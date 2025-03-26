@@ -38,6 +38,7 @@ Models Tuned already
 
 [Cyboghost/gemma3-linux:latest](https://ollama.com/Cyboghost/gemma3-linux)
 [Cyboghost/llama-linux:latest](https://ollama.com/Cyboghost/llama-linux)
+[Cyboghost/gemma3-4b-linux:latest](https://ollama.com/Cyboghost/gemma3-4b-linux)
 
 You can also just test out my tuned independent models version on Ollama. Make sure Ollama is installed, and then you can use the command below to inference the model right from the terminal.
 ```bash
