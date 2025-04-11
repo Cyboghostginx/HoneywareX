@@ -19,6 +19,7 @@ class CommandProcessor:
         self.last_exit_code = {}  # track last exit code per session
         self.known_commands = set()  # set of commands known to exist
         self.ping_active = {}  # track active ping sessions
+        self.env_vars = {}  # track environment variables per session
         self.load_known_commands()
         
     def load_known_commands(self):
@@ -60,6 +61,7 @@ class CommandProcessor:
         self.command_history[session_id] = []
         self.current_dirs[session_id] = f"/home/{USERNAME}"
         self.last_exit_code[session_id] = 0
+        self.env_vars[session_id] = {}  # initialize empty environment variables
         
         # initialize a separate filesystem for this session
         self.filesystem.initialize_session(session_id)
@@ -74,6 +76,8 @@ class CommandProcessor:
             del self.last_exit_code[session_id]
         if session_id in self.ping_active:
             del self.ping_active[session_id]
+        if session_id in self.env_vars:
+            del self.env_vars[session_id]
         
         # clean up the filesystem for this session
         self.filesystem.cleanup_session(session_id)
@@ -307,6 +311,8 @@ class CommandProcessor:
             return self.cmd_mv(session_id, args)
         elif cmd == "sudo":
             return self.cmd_sudo(session_id, args)
+        elif cmd == "set":
+            return self.cmd_set(session_id, args)
         elif cmd == "ifconfig":
             return self.cmd_ifconfig(session_id, args)
         elif cmd == "clear":
@@ -321,6 +327,68 @@ class CommandProcessor:
             else:
                 self.last_exit_code[session_id] = 127
                 return f"bash: {cmd}: command not found"
+    
+    def cmd_set(self, session_id, args=None):
+        """handle the set command to display or modify shell variables"""
+        # if no arguments, display all variables
+        if not args:
+            # get the environment variables we want to display
+            # we'll show both system and user-defined variables
+            env_vars = {
+                "HOME": f"/home/{USERNAME}",
+                "USER": USERNAME,
+                "SHELL": "/bin/bash",
+                "PATH": "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "PWD": self.current_dirs.get(session_id, f"/home/{USERNAME}"),
+                "LANG": "en_US.UTF-8",
+                "TERM": "xterm-256color",
+                "MAIL": f"/var/mail/{USERNAME}",
+                "LOGNAME": USERNAME,
+                "HOSTNAME": self.hostname,
+                "HISTSIZE": "1000",
+                "HISTFILESIZE": "2000"
+            }
+            
+            # add any custom variables set by the user in this session
+            if session_id in self.env_vars:
+                env_vars.update(self.env_vars[session_id])
+            
+            # format and return the variables
+            result = []
+            for name, value in sorted(env_vars.items()):
+                result.append(f"{name}={value}")
+            
+            self.last_exit_code[session_id] = 0
+            return "\n".join(result)
+        
+        # handle setting a variable (VAR=value syntax)
+        elif len(args) == 1 and '=' in args[0]:
+            # parse and set the variable
+            var_parts = args[0].split('=', 1)
+            var_name = var_parts[0]
+            var_value = var_parts[1] if len(var_parts) > 1 else ""
+            
+            # if value is quoted, remove the quotes
+            if var_value and var_value[0] == var_value[-1] and var_value[0] in ('"', "'"):
+                var_value = var_value[1:-1]
+            
+            # set the variable
+            self.env_vars[session_id][var_name] = var_value
+            self.last_exit_code[session_id] = 0
+            return ""
+        
+        # handle set with options
+        else:
+            # process common set options
+            if '-o' in args:
+                return "Usage: set -o option[=value]\nTry 'help set' for more information."
+            elif '-x' in args:
+                return "set: shell debugging enabled"
+            elif '-e' in args:
+                return "set: exit immediately if a command exits with a non-zero status"
+            else:
+                self.last_exit_code[session_id] = 1
+                return f"set: invalid option or argument: {' '.join(args)}\nTry 'help set' for more information."
 
     def cmd_ping(self, session_id, args):
         """
