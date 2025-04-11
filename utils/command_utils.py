@@ -11,7 +11,7 @@ NATIVE_COMMANDS = [
     'whoami', 'uname', 'ps', 'date', 
     
     # system Interaction
-    'clear', 'ping', 'ifconfig', 'sudo'
+    'clear', 'ping', 'ifconfig', 'sudo', 'set'
     
     # session Management
     'exit', 'quit', 'logout'
